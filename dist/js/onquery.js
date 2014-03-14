@@ -175,13 +175,13 @@ haxe.ds.StringMap.prototype = {
 };
 var com = {};
 com.onquery = {};
-com.onquery.Context = function(parent) {
+com.onquery.SignalContext = function(parent) {
 	haxe.ds.StringMap.call(this);
 	this._parent = parent;
 };
-com.onquery.Context.__name__ = true;
-com.onquery.Context.__super__ = haxe.ds.StringMap;
-com.onquery.Context.prototype = $extend(haxe.ds.StringMap.prototype,{
+com.onquery.SignalContext.__name__ = true;
+com.onquery.SignalContext.__super__ = haxe.ds.StringMap;
+com.onquery.SignalContext.prototype = $extend(haxe.ds.StringMap.prototype,{
 	getParent: function() {
 		return this._parent;
 	}
@@ -220,7 +220,7 @@ com.onquery.Context.prototype = $extend(haxe.ds.StringMap.prototype,{
 	,iterator: function() {
 		return this.getMap().iterator();
 	}
-	,__class__: com.onquery.Context
+	,__class__: com.onquery.SignalContext
 });
 com.onquery.OnQuery = $hx_exports.OnQuery = function() { };
 com.onquery.OnQuery.__name__ = true;
@@ -234,7 +234,7 @@ com.onquery.OnQuery.getContext = function(target) {
 	var e = new Event("_context_");
 	target.dispatchEvent(e);
 	if(e.context == null) {
-		var c = new com.onquery.Context();
+		var c = new com.onquery.SignalContext();
 		c.setParent(com.onquery.OnQuery.globalContext);
 		c.set("_target_",target);
 		var w = new com.onquery.Watcher(c);
@@ -271,7 +271,7 @@ com.onquery.Watcher.prototype = {
 		this.on(query).removeListener(handler);
 	}
 	,use: function(data) {
-		var c = new com.onquery.Context();
+		var c = new com.onquery.SignalContext();
 		var $it0 = data.keys();
 		while( $it0.hasNext() ) {
 			var i = $it0.next();
@@ -301,6 +301,7 @@ com.onquery.collections.ListenersArray.prototype = {
 	}
 	,addListener: function(listener,options) {
 		if(options == null) options = { };
+		this.removeListener(listener);
 		var slot = new com.onquery.collections.Slot(listener,options);
 		this.list.add(slot);
 	}
@@ -326,45 +327,6 @@ com.onquery.collections.Slot.prototype = {
 	__class__: com.onquery.collections.Slot
 };
 com.onquery.core = {};
-com.onquery.core.SignalToken = function(signal) {
-	this.time = 0;
-	this.count = 0;
-	this.setSignal(signal);
-};
-com.onquery.core.SignalToken.__name__ = true;
-com.onquery.core.SignalToken.prototype = {
-	getSignal: function() {
-		return this._signal;
-	}
-	,setSignal: function(value) {
-		if(this._signal == value) return this._signal;
-		this._signal = value;
-		if(this._signal != null) this._signal.addListener($bind(this,this.refresh));
-		return this._signal;
-	}
-	,refresh: function(event) {
-		this.time = com.onquery.core.SignalToken.currentTime++;
-		this.count++;
-	}
-	,reset: function(event) {
-		this.count = 0;
-		this.time = 0;
-	}
-	,__class__: com.onquery.core.SignalToken
-};
-com.onquery.core.Connector = function(connect,argc,precedence,leftAssociative) {
-	if(leftAssociative == null) leftAssociative = false;
-	if(precedence == null) precedence = 0;
-	if(argc == null) argc = 0;
-	this.connect = connect;
-	this.argc = argc;
-	this.precedence = precedence;
-	this.leftAssociative = leftAssociative;
-};
-com.onquery.core.Connector.__name__ = true;
-com.onquery.core.Connector.prototype = {
-	__class__: com.onquery.core.Connector
-};
 com.onquery.core.Interpreter = function() { };
 com.onquery.core.Interpreter.__name__ = true;
 com.onquery.core.Interpreter.compile = function(expression,context) {
@@ -388,27 +350,13 @@ com.onquery.core.Interpreter.build = function(prototype,context) {
 	ePrefix.match(prototype.type);
 	var prefix = ePrefix.matched(1);
 	var type = ePrefix.matched(2);
+	if(prefix == "*") prefix = "#";
 	switch(prefix) {
-	case "*":
-		var p = prototype.properties.pop();
-		if(p.getName() == "") signal = com.onquery.core.Interpreter.compile(p.getValue(),context);
-		break;
 	case "$":
 		signal = context.get(HxOverrides.substr(prototype.type,1,null));
 		break;
 	case "#":
-		switch(type) {
-		case "timeout":
-			break;
-		case "interval":
-			break;
-		case "seq":
-			break;
-		case "any":
-			break;
-		case "all":
-			break;
-		}
+		signal = (com.onquery.core.Build.registry.get(type))(prototype,context);
 		break;
 	default:
 		signal = new com.onquery.signals.Signal(context);
@@ -416,8 +364,8 @@ com.onquery.core.Interpreter.build = function(prototype,context) {
 	}
 	var $it0 = prototype.properties.iterator();
 	while( $it0.hasNext() ) {
-		var p1 = $it0.next();
-		if(js.Boot.__instanceof(p1,com.onquery.pseudos.Pseudo)) signal = (js.Boot.__cast(p1 , com.onquery.pseudos.Pseudo)).attach(signal); else if(js.Boot.__instanceof(p1,com.onquery.filters.Filter)) signal.filters.add(p1);
+		var p = $it0.next();
+		if(js.Boot.__instanceof(p,com.onquery.pseudos.Pseudo)) signal = (js.Boot.__cast(p , com.onquery.pseudos.Pseudo)).attach(signal); else if(js.Boot.__instanceof(p,com.onquery.filters.Filter)) signal.filters.add(p);
 	}
 	return signal;
 };
@@ -559,33 +507,18 @@ com.onquery.pseudos.Pseudo.prototype = {
 	}
 	,__class__: com.onquery.pseudos.Pseudo
 };
-com.onquery.pseudos.DelayPseudo = function() {
-	this.delayed = false;
-	com.onquery.pseudos.Pseudo.call(this,"delay");
+com.onquery.pseudos.RewindPseudo = function() {
+	com.onquery.pseudos.Pseudo.call(this,"rewind");
 };
-com.onquery.pseudos.DelayPseudo.__name__ = true;
-com.onquery.pseudos.DelayPseudo.__interfaces__ = [com.onquery.filters.Filter];
-com.onquery.pseudos.DelayPseudo.__super__ = com.onquery.pseudos.Pseudo;
-com.onquery.pseudos.DelayPseudo.prototype = $extend(com.onquery.pseudos.Pseudo.prototype,{
+com.onquery.pseudos.RewindPseudo.__name__ = true;
+com.onquery.pseudos.RewindPseudo.__super__ = com.onquery.pseudos.Pseudo;
+com.onquery.pseudos.RewindPseudo.prototype = $extend(com.onquery.pseudos.Pseudo.prototype,{
 	attach: function(signal) {
-		this._signal = signal;
-		signal.filters.add(this);
+		var s = signal;
+		s.setRewinder(com.onquery.core.Interpreter.compile(this.getValue(),s.getContext()));
 		return signal;
 	}
-	,match: function(event) {
-		var _g = this;
-		if(this.delayed) {
-			this.delayed = false;
-			return true;
-		}
-		var onDelay = function() {
-			_g.delayed = true;
-			_g._signal.invokeListeners(event);
-		};
-		haxe.Timer.delay(onDelay,Std.parseInt("0" + this.getValue()));
-		return false;
-	}
-	,__class__: com.onquery.pseudos.DelayPseudo
+	,__class__: com.onquery.pseudos.RewindPseudo
 });
 com.onquery.pseudos.PausePseudo = function() {
 	this.paused = false;
@@ -619,18 +552,33 @@ com.onquery.pseudos.PausePseudo.prototype = $extend(com.onquery.pseudos.Pseudo.p
 	}
 	,__class__: com.onquery.pseudos.PausePseudo
 });
-com.onquery.pseudos.RewindPseudo = function() {
-	com.onquery.pseudos.Pseudo.call(this,"rewind");
+com.onquery.pseudos.DelayPseudo = function() {
+	this.delayed = false;
+	com.onquery.pseudos.Pseudo.call(this,"delay");
 };
-com.onquery.pseudos.RewindPseudo.__name__ = true;
-com.onquery.pseudos.RewindPseudo.__super__ = com.onquery.pseudos.Pseudo;
-com.onquery.pseudos.RewindPseudo.prototype = $extend(com.onquery.pseudos.Pseudo.prototype,{
+com.onquery.pseudos.DelayPseudo.__name__ = true;
+com.onquery.pseudos.DelayPseudo.__interfaces__ = [com.onquery.filters.Filter];
+com.onquery.pseudos.DelayPseudo.__super__ = com.onquery.pseudos.Pseudo;
+com.onquery.pseudos.DelayPseudo.prototype = $extend(com.onquery.pseudos.Pseudo.prototype,{
 	attach: function(signal) {
-		var s = signal;
-		s.setRewinder(com.onquery.core.Interpreter.compile(this.getValue(),s.getContext()));
+		this._signal = signal;
+		signal.filters.add(this);
 		return signal;
 	}
-	,__class__: com.onquery.pseudos.RewindPseudo
+	,match: function(event) {
+		var _g = this;
+		if(this.delayed) {
+			this.delayed = false;
+			return true;
+		}
+		var onDelay = function() {
+			_g.delayed = true;
+			_g._signal.invokeListeners(event);
+		};
+		haxe.Timer.delay(onDelay,Std.parseInt("0" + this.getValue()));
+		return false;
+	}
+	,__class__: com.onquery.pseudos.DelayPseudo
 });
 com.onquery.pseudos.ThrottlePseudo = function() {
 	this.throttling = false;
@@ -656,184 +604,44 @@ com.onquery.pseudos.ThrottlePseudo.prototype = $extend(com.onquery.pseudos.Pseud
 	}
 	,__class__: com.onquery.pseudos.ThrottlePseudo
 });
-com.onquery.signals = {};
-com.onquery.signals.CoreSignal = function(c) {
-	this._context = new com.onquery.Context(c);
-	this._context.set("this",this);
-	this.listeners = new com.onquery.collections.ListenersArray();
+com.onquery.core.SignalToken = function(signal) {
+	this.time = 0;
+	this.count = 0;
+	this.setSignal(signal);
 };
-com.onquery.signals.CoreSignal.__name__ = true;
-com.onquery.signals.CoreSignal.__interfaces__ = [com.onquery.collections.ListenersCollection];
-com.onquery.signals.CoreSignal.prototype = {
-	getContext: function() {
-		return this._context;
+com.onquery.core.SignalToken.__name__ = true;
+com.onquery.core.SignalToken.prototype = {
+	getSignal: function() {
+		return this._signal;
 	}
-	,getTarget: function() {
-		return this._context.get("_target_");
+	,setSignal: function(value) {
+		if(this._signal == value) return this._signal;
+		this._signal = value;
+		if(this._signal != null) this._signal.addListener($bind(this,this.refresh));
+		return this._signal;
 	}
-	,getType: function() {
-		return this._type;
+	,refresh: function(event) {
+		this.time = com.onquery.core.SignalToken.currentTime++;
+		this.count++;
 	}
-	,setType: function(value) {
-		return this._type = value;
+	,reset: function(event) {
+		this.count = 0;
+		this.time = 0;
 	}
-	,addListener: function(listener,options) {
-		this.listeners.addListener(listener,options);
-	}
-	,removeListener: function(listener) {
-		this.listeners.removeListener(listener);
-	}
-	,removeAllListeners: function() {
-		this.listeners = new com.onquery.collections.ListenersArray();
-	}
-	,invokeListeners: function(event) {
-		this.listeners.invokeListeners(event);
-	}
-	,__class__: com.onquery.signals.CoreSignal
+	,__class__: com.onquery.core.SignalToken
 };
-com.onquery.signals.Signal = function(c) {
-	com.onquery.signals.CoreSignal.call(this,c);
-	this.filters = new List();
+com.onquery.core.Connector = function(connect,argc,precedence,leftAssociative) {
+	if(leftAssociative == null) leftAssociative = false;
+	if(precedence == null) precedence = 0;
+	if(argc == null) argc = 0;
+	this.connect = connect;
+	this.argc = argc;
+	this.precedence = precedence;
+	this.leftAssociative = leftAssociative;
 };
-com.onquery.signals.Signal.__name__ = true;
-com.onquery.signals.Signal.__super__ = com.onquery.signals.CoreSignal;
-com.onquery.signals.Signal.prototype = $extend(com.onquery.signals.CoreSignal.prototype,{
-	setType: function(t) {
-		t = com.onquery.signals.CoreSignal.prototype.setType.call(this,t);
-		this.getTarget().addEventListener(t,$bind(this,this.invokeListeners),false);
-		return t;
-	}
-	,dispose: function(event) {
-		this.getTarget().removeEventListener(this.getType(),$bind(this,this.invokeListeners),false);
-		this.listeners = null;
-	}
-	,invokeListeners: function(event) {
-		var $it0 = this.filters.iterator();
-		while( $it0.hasNext() ) {
-			var f = $it0.next();
-			if(!f.match(event)) return;
-		}
-		com.onquery.signals.CoreSignal.prototype.invokeListeners.call(this,event);
-	}
-	,__class__: com.onquery.signals.Signal
-});
-com.onquery.signals.ConnectedSignal = $hx_exports.ConnectedSignal = function(c,t) {
-	com.onquery.signals.Signal.call(this,c);
-	this.setRewinder(this);
-	this.queue = new List();
-	this.setTokens(t);
-};
-com.onquery.signals.ConnectedSignal.__name__ = true;
-com.onquery.signals.ConnectedSignal.__super__ = com.onquery.signals.Signal;
-com.onquery.signals.ConnectedSignal.prototype = $extend(com.onquery.signals.Signal.prototype,{
-	setRewinder: function(value) {
-		if(this._rewinder != null) this._rewinder.removeListener($bind(this,this.rewind));
-		this._rewinder = value;
-		if(this._rewinder != null) this._rewinder.addListener($bind(this,this.rewind));
-		return this._rewinder;
-	}
-	,rewind: function(event) {
-		var $it0 = this.queue.iterator();
-		while( $it0.hasNext() ) {
-			var token = $it0.next();
-			if(js.Boot.__instanceof(token,com.onquery.core.SignalToken)) token.reset();
-		}
-	}
-	,recheck: function(event) {
-		var count = this.reduce().count;
-		if(count > 0) this.invokeListeners(new Event(this.getType()));
-	}
-	,reduce: function() {
-		var stack = new List();
-		var len = 0;
-		var token;
-		var q = this.queue.map(function(o) {
-			return o;
-		});
-		while(token = q.pop()) if(js.Boot.__instanceof(token,com.onquery.core.SignalToken)) {
-			stack.push(token);
-			++len;
-		} else if(js.Boot.__instanceof(token,com.onquery.core.Connector)) {
-			var connector = token;
-			if(len < connector.argc) throw "too few arguments for operator";
-			var args = new List();
-			args.add(stack.pop());
-			if(connector.argc == 2) args.push(stack.pop());
-			len -= connector.argc - 1;
-			var j = connector.connect(args);
-			stack.push(j);
-		} else throw "unexpected token " + Std.string(token);
-		if(stack.length == 1) return stack.pop();
-		throw "too many values";
-	}
-	,setTokens: function(tokens) {
-		var stack = new List();
-		var $it0 = tokens.iterator();
-		while( $it0.hasNext() ) {
-			var token = $it0.next();
-			if(js.Boot.__instanceof(token,com.onquery.signals.Signal)) {
-				this.queue.add(new com.onquery.core.SignalToken(token));
-				token.addListener($bind(this,this.recheck));
-			} else if(js.Boot.__instanceof(token,com.onquery.core.Connector)) {
-				var c = token;
-				if(c == com.onquery.core.Connector.OPEN) stack.push(c); else if(c == com.onquery.core.Connector.CLOSE) {
-					var found = false;
-					var o;
-					while(o = stack.pop()) {
-						if(o == com.onquery.core.Connector.OPEN) {
-							found = true;
-							break;
-						}
-						this.queue.add(o);
-					}
-					if(!found) throw "unmatched parentheses";
-				} else {
-					var op1 = c;
-					var o1;
-					while(o1 = stack.first()) {
-						var op2 = o1;
-						if(op2 == com.onquery.core.Connector.OPEN || op2 == com.onquery.core.Connector.CLOSE) break;
-						var p1 = op1.precedence;
-						var p2 = op2.precedence;
-						if(!(op1.leftAssociative && p1 <= p2 || p1 < p2)) break;
-						this.queue.add(stack.pop());
-					}
-					stack.push(op1);
-				}
-			} else throw "unknown token " + Std.string(token);
-		}
-		var token1;
-		while(token1 = stack.pop()) {
-			if(token1 == com.onquery.core.Connector.OPEN || token1 == com.onquery.core.Connector.CLOSE) throw "unmatched parentheses";
-			this.queue.add(token1);
-		}
-	}
-	,__class__: com.onquery.signals.ConnectedSignal
-});
-haxe.Timer = function(time_ms) {
-	var me = this;
-	this.id = setInterval(function() {
-		me.run();
-	},time_ms);
-};
-haxe.Timer.__name__ = true;
-haxe.Timer.delay = function(f,time_ms) {
-	var t = new haxe.Timer(time_ms);
-	t.run = function() {
-		t.stop();
-		f();
-	};
-	return t;
-};
-haxe.Timer.prototype = {
-	stop: function() {
-		if(this.id == null) return;
-		clearInterval(this.id);
-		this.id = null;
-	}
-	,run: function() {
-	}
-	,__class__: haxe.Timer
+com.onquery.core.Connector.__name__ = true;
+com.onquery.core.Connector.prototype = {
+	__class__: com.onquery.core.Connector
 };
 var js = {};
 js.Boot = function() { };
@@ -953,6 +761,300 @@ js.Boot.__instanceof = function(o,cl) {
 js.Boot.__cast = function(o,t) {
 	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
+com.onquery.signals = {};
+com.onquery.signals.CoreSignal = function(c) {
+	this._context = new com.onquery.SignalContext(c);
+	this._context.set("this",this);
+	this.listeners = new com.onquery.collections.ListenersArray();
+};
+com.onquery.signals.CoreSignal.__name__ = true;
+com.onquery.signals.CoreSignal.__interfaces__ = [com.onquery.collections.ListenersCollection];
+com.onquery.signals.CoreSignal.prototype = {
+	getContext: function() {
+		return this._context;
+	}
+	,getTarget: function() {
+		return this._context.get("_target_");
+	}
+	,getType: function() {
+		return this._type;
+	}
+	,setType: function(value) {
+		return this._type = value;
+	}
+	,addListener: function(listener,options) {
+		this.listeners.addListener(listener,options);
+	}
+	,removeListener: function(listener) {
+		this.listeners.removeListener(listener);
+	}
+	,removeAllListeners: function() {
+		this.listeners = new com.onquery.collections.ListenersArray();
+	}
+	,invokeListeners: function(event) {
+		this.listeners.invokeListeners(event);
+	}
+	,__class__: com.onquery.signals.CoreSignal
+};
+com.onquery.signals.Signal = function(c) {
+	com.onquery.signals.CoreSignal.call(this,c);
+	this.filters = new List();
+};
+com.onquery.signals.Signal.__name__ = true;
+com.onquery.signals.Signal.__super__ = com.onquery.signals.CoreSignal;
+com.onquery.signals.Signal.prototype = $extend(com.onquery.signals.CoreSignal.prototype,{
+	setType: function(t) {
+		t = com.onquery.signals.CoreSignal.prototype.setType.call(this,t);
+		this.getTarget().addEventListener(t,$bind(this,this.invokeListeners),false);
+		return t;
+	}
+	,dispose: function(event) {
+		this.getTarget().removeEventListener(this.getType(),$bind(this,this.invokeListeners),false);
+		this.listeners = null;
+	}
+	,invokeListeners: function(event) {
+		var $it0 = this.filters.iterator();
+		while( $it0.hasNext() ) {
+			var f = $it0.next();
+			if(!f.match(event)) return;
+		}
+		com.onquery.signals.CoreSignal.prototype.invokeListeners.call(this,event);
+	}
+	,__class__: com.onquery.signals.Signal
+});
+com.onquery.signals.CombinedSignal = function(c) {
+	com.onquery.signals.Signal.call(this,c);
+	this.setRewinder(this);
+};
+com.onquery.signals.CombinedSignal.__name__ = true;
+com.onquery.signals.CombinedSignal.__super__ = com.onquery.signals.Signal;
+com.onquery.signals.CombinedSignal.prototype = $extend(com.onquery.signals.Signal.prototype,{
+	setRewinder: function(value) {
+		if(this._rewinder != null) this._rewinder.removeListener($bind(this,this.rewind));
+		this._rewinder = value;
+		if(this._rewinder != null) this._rewinder.addListener($bind(this,this.rewind));
+		return this._rewinder;
+	}
+	,rewind: function(event) {
+		throw "not implimented";
+	}
+	,__class__: com.onquery.signals.CombinedSignal
+});
+com.onquery.signals.AllSignal = function(c,t) {
+	com.onquery.signals.CombinedSignal.call(this,c);
+	this.queue = new List();
+	var $it0 = t.iterator();
+	while( $it0.hasNext() ) {
+		var token = $it0.next();
+		this.queue.add(new com.onquery.core.SignalToken(token));
+		token.addListener($bind(this,this.recheck));
+	}
+	this.rewind();
+};
+com.onquery.signals.AllSignal.__name__ = true;
+com.onquery.signals.AllSignal.build = function(p,c) {
+	var l = com.onquery.core.Interpreter.interpt(com.onquery.core.Build.popArg(p));
+	var t = new List();
+	var $it0 = l.iterator();
+	while( $it0.hasNext() ) {
+		var e = $it0.next();
+		t.add(com.onquery.core.Interpreter.build(e,c));
+	}
+	var s = new com.onquery.signals.AllSignal(c,t);
+	s.setType(p.type);
+	return s;
+};
+com.onquery.signals.AllSignal.__super__ = com.onquery.signals.CombinedSignal;
+com.onquery.signals.AllSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
+	rewind: function(e) {
+		var $it0 = this.queue.iterator();
+		while( $it0.hasNext() ) {
+			var t = $it0.next();
+			t.reset();
+		}
+	}
+	,recheck: function(e) {
+		var all = true;
+		var i = this.queue.iterator();
+		while(i.hasNext()) all = i.next().count > 0;
+		if(all) this.invokeListeners(new Event(this.getType()));
+	}
+	,__class__: com.onquery.signals.AllSignal
+});
+com.onquery.signals.SequenceSignal = function(c,t) {
+	com.onquery.signals.CombinedSignal.call(this,c);
+	this.queue = t;
+	this.rewind();
+};
+com.onquery.signals.SequenceSignal.__name__ = true;
+com.onquery.signals.SequenceSignal.build = function(p,c) {
+	var l = com.onquery.core.Interpreter.interpt(com.onquery.core.Build.popArg(p));
+	var t = [];
+	var $it0 = l.iterator();
+	while( $it0.hasNext() ) {
+		var e = $it0.next();
+		t.push(com.onquery.core.Interpreter.build(e,c));
+	}
+	var s = new com.onquery.signals.SequenceSignal(c,t);
+	s.setType(p.type);
+	return s;
+};
+com.onquery.signals.SequenceSignal.__super__ = com.onquery.signals.CombinedSignal;
+com.onquery.signals.SequenceSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
+	rewind: function(e) {
+		this.reset();
+		this.nextSignal();
+	}
+	,reset: function() {
+		var _g = 0;
+		var _g1 = this.queue;
+		while(_g < _g1.length) {
+			var signal = _g1[_g];
+			++_g;
+			signal.removeListener($bind(this,this.nextSignal));
+		}
+		this.index = -1;
+	}
+	,nextSignal: function(e) {
+		var next = ++this.index;
+		if(next == this.queue.length) this.invokeListeners(e); else {
+			next %= this.queue.length;
+			this.reset();
+			this.index = next;
+			this.queue[next].addListener($bind(this,this.nextSignal));
+		}
+	}
+	,dispose: function(event) {
+		this.reset();
+		com.onquery.signals.CombinedSignal.prototype.dispose.call(this,event);
+	}
+	,__class__: com.onquery.signals.SequenceSignal
+});
+com.onquery.signals.ConnectedSignal = $hx_exports.ConnectedSignal = function(c,t) {
+	com.onquery.signals.CombinedSignal.call(this,c);
+	this.queue = new List();
+	this.setTokens(t);
+};
+com.onquery.signals.ConnectedSignal.__name__ = true;
+com.onquery.signals.ConnectedSignal.__super__ = com.onquery.signals.CombinedSignal;
+com.onquery.signals.ConnectedSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
+	rewind: function(event) {
+		var $it0 = this.queue.iterator();
+		while( $it0.hasNext() ) {
+			var token = $it0.next();
+			if(js.Boot.__instanceof(token,com.onquery.core.SignalToken)) token.reset();
+		}
+	}
+	,recheck: function(event) {
+		var count = this.reduce().count;
+		if(count > 0) this.invokeListeners(new Event(this.getType()));
+	}
+	,reduce: function() {
+		var stack = new List();
+		var len = 0;
+		var token;
+		var q = this.queue.map(function(o) {
+			return o;
+		});
+		while(token = q.pop()) if(js.Boot.__instanceof(token,com.onquery.core.SignalToken)) {
+			stack.push(token);
+			++len;
+		} else if(js.Boot.__instanceof(token,com.onquery.core.Connector)) {
+			var connector = token;
+			if(len < connector.argc) throw "too few arguments for operator";
+			var args = new List();
+			args.add(stack.pop());
+			if(connector.argc == 2) args.push(stack.pop());
+			len -= connector.argc - 1;
+			var j = connector.connect(args);
+			stack.push(j);
+		} else throw "unexpected token " + Std.string(token);
+		if(stack.length == 1) return stack.pop();
+		throw "too many values";
+	}
+	,setTokens: function(tokens) {
+		var stack = new List();
+		var $it0 = tokens.iterator();
+		while( $it0.hasNext() ) {
+			var token = $it0.next();
+			if(js.Boot.__instanceof(token,com.onquery.signals.Signal)) {
+				this.queue.add(new com.onquery.core.SignalToken(token));
+				token.addListener($bind(this,this.recheck));
+			} else if(js.Boot.__instanceof(token,com.onquery.core.Connector)) {
+				var c = token;
+				if(c == com.onquery.core.Connector.OPEN) stack.push(c); else if(c == com.onquery.core.Connector.CLOSE) {
+					var found = false;
+					var o;
+					while(o = stack.pop()) {
+						if(o == com.onquery.core.Connector.OPEN) {
+							found = true;
+							break;
+						}
+						this.queue.add(o);
+					}
+					if(!found) throw "unmatched parentheses";
+				} else {
+					var op1 = c;
+					var o1;
+					while(o1 = stack.first()) {
+						var op2 = o1;
+						if(op2 == com.onquery.core.Connector.OPEN || op2 == com.onquery.core.Connector.CLOSE) break;
+						var p1 = op1.precedence;
+						var p2 = op2.precedence;
+						if(!(op1.leftAssociative && p1 <= p2 || p1 < p2)) break;
+						this.queue.add(stack.pop());
+					}
+					stack.push(op1);
+				}
+			} else throw "unknown token " + Std.string(token);
+		}
+		var token1;
+		while(token1 = stack.pop()) {
+			if(token1 == com.onquery.core.Connector.OPEN || token1 == com.onquery.core.Connector.CLOSE) throw "unmatched parentheses";
+			this.queue.add(token1);
+		}
+	}
+	,__class__: com.onquery.signals.ConnectedSignal
+});
+com.onquery.core.Build = function() { };
+com.onquery.core.Build.__name__ = true;
+com.onquery.core.Build.popArg = function(p) {
+	var arg = "";
+	var f = p.properties.first();
+	if(js.Boot.__instanceof(f,com.onquery.pseudos.Pseudo) && f.getName() == "") {
+		arg = f.getValue();
+		p.properties.pop();
+	}
+	return arg;
+};
+com.onquery.core.Build.wrap = function(prototype,context) {
+	return com.onquery.core.Interpreter.compile(com.onquery.core.Build.popArg(prototype),context);
+};
+haxe.Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+haxe.Timer.__name__ = true;
+haxe.Timer.delay = function(f,time_ms) {
+	var t = new haxe.Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	};
+	return t;
+};
+haxe.Timer.prototype = {
+	stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
+	,run: function() {
+	}
+	,__class__: haxe.Timer
+};
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 Math.NaN = Number.NaN;
@@ -975,13 +1077,26 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
-com.onquery.OnQuery.globalContext = new com.onquery.Context((function($this) {
+com.onquery.OnQuery.globalContext = new com.onquery.SignalContext((function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
 	_g.set("version","0.0.0");
 	$r = _g;
 	return $r;
 }(this)));
+com.onquery.filters.PropertyFilter.operators = (function($this) {
+	var $r;
+	var _g = new haxe.ds.StringMap();
+	_g.set("",com.onquery.filters.PropertyFilter.exists);
+	_g.set("=",com.onquery.filters.PropertyFilter.equals);
+	_g.set("*=",com.onquery.filters.PropertyFilter.contains);
+	_g.set("!=",com.onquery.filters.PropertyFilter.differs);
+	_g.set("==",com.onquery.filters.PropertyFilter.boolEquals);
+	_g.set(">",com.onquery.filters.PropertyFilter.greaterThan);
+	_g.set("<",com.onquery.filters.PropertyFilter.lessThan);
+	$r = _g;
+	return $r;
+}(this));
 com.onquery.core.SignalToken.currentTime = 1;
 com.onquery.core.Connector.OPEN = new com.onquery.core.Connector(null);
 com.onquery.core.Connector.CLOSE = new com.onquery.core.Connector(null);
@@ -1030,18 +1145,19 @@ com.onquery.core.Connector.registry = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
-com.onquery.filters.PropertyFilter.operators = (function($this) {
+com.onquery.core.Build.registry = (function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
-	_g.set("",com.onquery.filters.PropertyFilter.exists);
-	_g.set("=",com.onquery.filters.PropertyFilter.equals);
-	_g.set("*=",com.onquery.filters.PropertyFilter.contains);
-	_g.set("!=",com.onquery.filters.PropertyFilter.differs);
-	_g.set("==",com.onquery.filters.PropertyFilter.boolEquals);
-	_g.set(">",com.onquery.filters.PropertyFilter.greaterThan);
-	_g.set("<",com.onquery.filters.PropertyFilter.lessThan);
+	_g.set("",com.onquery.core.Build.wrap);
+	_g.set("timeout",null);
+	_g.set("interval",null);
+	_g.set("any",null);
+	_g.set("all",com.onquery.signals.AllSignal.build);
+	_g.set("seq",com.onquery.signals.SequenceSignal.build);
 	$r = _g;
 	return $r;
 }(this));
 com.onquery.OnQuery.main();
 })(typeof window != "undefined" ? window : exports);
+
+//# sourceMappingURL=onquery.js.map

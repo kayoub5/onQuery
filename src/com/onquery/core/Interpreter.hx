@@ -6,8 +6,8 @@ import com.onquery.signals.*;
 import com.onquery.pseudos.*;
 
 class Interpreter{
-
-	static public function compile(expression:String,context:Context):Signal{
+	
+	static public function compile(expression:String,context:SignalContext):Signal{
 		var input:List<Dynamic> = interpt(expression);
 		var signal:Signal=null;
 		var output:List<Dynamic>=new List<Dynamic>();
@@ -26,46 +26,32 @@ class Interpreter{
 			signal=new ConnectedSignal(context,output);
 			signal.setType(expression);
 		}
-
+		
 		return signal;
 	}
-
-
-	static private function build(prototype:SignalPrototype,context:Context):Signal{
+	
+	
+	static public function build(prototype:SignalPrototype,context:SignalContext):Signal{
 		var signal:Signal=null;
 		var ePrefix:EReg=~/^([$#\*])?(.*)/;
 		ePrefix.match(prototype.type);
 		var prefix:String=ePrefix.matched(1);
-		var type:String=ePrefix.matched(2);
+		var type:String = ePrefix.matched(2);
+		
+		if (prefix == '*') prefix = '#';
+		
 		switch (prefix) {
-			case'*':
-			var p:Pseudo=prototype.properties.pop();
-			if(p.getName()==''){
-				signal=compile(p.getValue(),context);
-			}
-
 			case'$':
 			//TODO sub signal
 			signal=context.get(prototype.type.substr(1));
-
 			case'#':
-			switch (type) {
-				case'timeout':
-
-				case'interval':
-
-				case'seq':
-
-				case'any':
-
-				case'all':
-			}
-
+			signal=Build.registry.get(type)(prototype, context);
+			
 			default:
 			signal=new Signal(context);
 			signal.setType(prototype.type);
 		}
-
+		
 		for (p in prototype.properties){
 			if(Std.is(p,Pseudo)){
 				signal=cast(p,Pseudo).attach(signal);
@@ -76,24 +62,24 @@ class Interpreter{
 		}
 		return signal;
 	}
-
-
-
+	
+	
+	
 	static public function interpt(input:String):List<Dynamic>{
 		var 
 		ePseudo:EReg=~/^:([:\w]*)\(([^\)]*)\)?/,
-eConnector:EReg=~/^[>+!&{}]/,
-eOperator:EReg=~/^[<>+~!@$%^&{};,=]+/,
-eType:EReg=~/^[_$#\*\-\.\w]+/,
-eFilter:EReg=~/^\[[^\]]*\]/,
-eSpace:EReg=~/^\s+/;
-
-var output:List<Dynamic>=new List<Dynamic>();
-while(input.length>0){
-	//space
-	if (eSpace.match(input)) {
-		input=eSpace.replace(input,'');
-	}
+		eConnector:EReg=~/^[>+!&{}]/,
+		eOperator:EReg=~/^[<>+~!@$%^&{};,=]+/,
+		eType:EReg=~/^[_$#\*\-\.\w]+/,
+		eFilter:EReg=~/^\[[^\]]*\]/,
+		eSpace:EReg=~/^\s+/;
+		
+		var output:List<Dynamic>=new List<Dynamic>();
+		while(input.length>0){
+			//space
+			if (eSpace.match(input)) {
+				input=eSpace.replace(input,'');
+			}
 			//type
 			else if (eType.match(input)) {
 				var type:String=eType.matched(0);
@@ -118,7 +104,7 @@ while(input.length>0){
 					operator=eOperator.matched(0);
 					filter=eOperator.replace(filter,'');
 				}
-
+				
 				var proto:SignalPrototype= output.last();
 				proto.properties.add(new com.onquery.filters.PropertyFilter(name,operator,filter));
 			}
@@ -140,10 +126,10 @@ while(input.length>0){
 			else{
 				throw 'error parsing '+input.substr(0,20);
 			}
-
+			
 		}
 		//trace(output.toString());
 		return output;
 	}
-
+	
 }

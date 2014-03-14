@@ -1,5 +1,9 @@
 <haxe>
 	<class path="Array" params="T" file="K:\Program Files\HaxeToolkit\haxe\std/js/_std/Array.hx" extern="1">
+		<length public="1" set="null">
+			<x path="Int"/>
+			<haxe_doc>The length of `this` Array.</haxe_doc>
+		</length>
 		<join public="1" set="method">
 			<f a="sep">
 				<c path="String"/>
@@ -865,7 +869,7 @@
 			<m n=":coreApi"/>
 		</meta>
 	</class>
-	<class path="com.onquery.Context" params="" file="src/com/onquery/Context.hx">
+	<class path="com.onquery.SignalContext" params="" file="src/com/onquery/SignalContext.hx">
 		<extends path="haxe.ds.StringMap"><d/></extends>
 		<_parent><c path="haxe.ds.StringMap"><d/></c></_parent>
 		<getParent public="1" set="method" line="7"><f a=""><c path="haxe.ds.StringMap"><d/></c></f></getParent>
@@ -890,7 +894,7 @@
 </f></new>
 	</class>
 	<class path="com.onquery.OnQuery" params="" file="src/com/onquery/OnQuery.hx">
-		<globalContext public="1" line="12" static="1"><c path="com.onquery.Context"/></globalContext>
+		<globalContext public="1" line="12" static="1"><c path="com.onquery.SignalContext"/></globalContext>
 		<watch public="1" set="method" line="16" static="1"><f a="target">
 	<t path="com.onquery.EventTarget"/>
 	<c path="com.onquery.Watcher"/>
@@ -901,7 +905,7 @@
 </f></when>
 		<getContext public="1" set="method" line="24" static="1"><f a="target">
 	<t path="com.onquery.EventTarget"/>
-	<c path="com.onquery.Context"/>
+	<c path="com.onquery.SignalContext"/>
 </f></getContext>
 		<main set="method" line="40" static="1">
 			<f a=""><x path="Void"/></f>
@@ -926,7 +930,7 @@
 	<typedef path="com.onquery.ContextEvent" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><c path="js.html.Event"/></typedef>
 	<typedef path="com.onquery.UInt" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><x path="Int"/></typedef>
 	<class path="com.onquery.Watcher" params="" file="src/com/onquery/Watcher.hx">
-		<context><c path="com.onquery.Context"/></context>
+		<context><c path="com.onquery.SignalContext"/></context>
 		<bind public="1" set="method" line="14"><f a="query:handler:?options" v="::null">
 	<c path="String"/>
 	<t path="com.onquery.EventListener"/>
@@ -947,7 +951,7 @@
 	<c path="com.onquery.Watcher"/>
 </f></use>
 		<new public="1" set="method" line="9"><f a="c">
-	<c path="com.onquery.Context"/>
+	<c path="com.onquery.SignalContext"/>
 	<x path="Void"/>
 </f></new>
 	</class>
@@ -998,11 +1002,11 @@
 	<d/>
 	<x path="Void"/>
 </f></addListener>
-		<invokeListeners public="1" set="method" line="26"><f a="event">
+		<invokeListeners public="1" set="method" line="27"><f a="event">
 	<d/>
 	<x path="Void"/>
 </f></invokeListeners>
-		<removeAllListeners public="1" set="method" line="38"><f a=""><x path="Void"/></f></removeAllListeners>
+		<removeAllListeners public="1" set="method" line="39"><f a=""><x path="Void"/></f></removeAllListeners>
 		<new public="1" set="method" line="8"><f a=""><x path="Void"/></f></new>
 	</class>
 	<class path="com.onquery.collections.Slot" params="" file="src/com/onquery/collections/Slot.hx">
@@ -1022,67 +1026,27 @@
 		</new>
 		<haxe_doc>*</haxe_doc>
 	</class>
-	<class path="com.onquery.core.SignalToken" params="" file="src/com/onquery/core/SignalToken.hx">
-		<currentTime line="9" static="1"><x path="Float"/></currentTime>
-		<count public="1"><x path="Float"/></count>
-		<time public="1"><x path="Float"/></time>
-		<_signal><c path="com.onquery.signals.Signal"/></_signal>
-		<getSignal public="1" set="method" line="17"><f a=""><c path="com.onquery.signals.Signal"/></f></getSignal>
-		<setSignal public="1" set="method" line="19"><f a="value">
-	<c path="com.onquery.signals.Signal"/>
-	<c path="com.onquery.signals.Signal"/>
-</f></setSignal>
-		<refresh set="method" line="30"><f a="?event" v="null">
-	<d/>
-	<x path="Void"/>
-</f></refresh>
-		<reset public="1" set="method" line="35"><f a="?event" v="null">
-	<d/>
-	<x path="Void"/>
-</f></reset>
-		<new public="1" set="method" line="11"><f a="?signal" v="null">
-	<c path="com.onquery.signals.Signal"/>
-	<x path="Void"/>
-</f></new>
-	</class>
-	<class path="com.onquery.core.Connector" params="" file="src/com/onquery/core/Connector.hx">
-		<OPEN public="1" line="20" static="1"><c path="com.onquery.core.Connector"/></OPEN>
-		<CLOSE public="1" line="21" static="1"><c path="com.onquery.core.Connector"/></CLOSE>
-		<NOT public="1" line="23" static="1"><c path="com.onquery.core.Connector"/></NOT>
-		<OR public="1" line="33" static="1"><c path="com.onquery.core.Connector"/></OR>
-		<AND public="1" line="45" static="1"><c path="com.onquery.core.Connector"/></AND>
-		<NEXT public="1" line="57" static="1"><c path="com.onquery.core.Connector"/></NEXT>
-		<registry public="1" line="72" static="1"><c path="haxe.ds.StringMap"><c path="com.onquery.core.Connector"/></c></registry>
-		<precedence public="1"><x path="Int"/></precedence>
-		<argc public="1"><x path="Int"/></argc>
-		<leftAssociative public="1"><x path="Bool"/></leftAssociative>
-		<connect public="1"><f a="">
-	<c path="List"><c path="com.onquery.core.SignalToken"/></c>
-	<c path="com.onquery.core.SignalToken"/>
-</f></connect>
-		<new public="1" set="method" line="12"><f a="connect:?argc:?precedence:?leftAssociative" v=":0:0:false">
-	<f a="">
-		<c path="List"><c path="com.onquery.core.SignalToken"/></c>
-		<c path="com.onquery.core.SignalToken"/>
-	</f>
-	<x path="Int"/>
-	<x path="Int"/>
-	<x path="Bool"/>
-	<x path="Void"/>
-</f></new>
-	</class>
+	<typedef path="com.onquery.core.Builder" params="" file="src/com/onquery/core/Build.hx" module="com.onquery.core.Build">
+		<f a=":">
+			<c path="com.onquery.core.SignalPrototype"/>
+			<c path="com.onquery.SignalContext"/>
+			<c path="com.onquery.signals.Signal"/>
+		</f>
+		<haxe_doc>* ...
+ * @author Ayoub Kaanich</haxe_doc>
+	</typedef>
 	<class path="com.onquery.core.Interpreter" params="" file="src/com/onquery/core/Interpreter.hx">
 		<compile public="1" set="method" line="10" static="1"><f a="expression:context">
 	<c path="String"/>
-	<c path="com.onquery.Context"/>
+	<c path="com.onquery.SignalContext"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></compile>
-		<build set="method" line="34" static="1"><f a="prototype:context">
+		<build public="1" set="method" line="34" static="1"><f a="prototype:context">
 	<c path="com.onquery.core.SignalPrototype"/>
-	<c path="com.onquery.Context"/>
+	<c path="com.onquery.SignalContext"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></build>
-		<interpt public="1" set="method" line="82" static="1"><f a="input">
+		<interpt public="1" set="method" line="68" static="1"><f a="input">
 	<c path="String"/>
 	<c path="List"><d/></c>
 </f></interpt>
@@ -1175,20 +1139,14 @@
 	<x path="Void"/>
 </f></new>
 	</class>
-	<class path="com.onquery.pseudos.DelayPseudo" params="" file="src/com/onquery/pseudos/DelayPseudo.hx">
+	<class path="com.onquery.pseudos.RewindPseudo" params="" file="src/com/onquery/pseudos/RewindPseudo.hx">
 		<extends path="com.onquery.pseudos.Pseudo"/>
-		<implements path="com.onquery.filters.Filter"/>
-		<_signal><c path="com.onquery.signals.Signal"/></_signal>
-		<delayed><x path="Bool"/></delayed>
+		<rewinder><c path="com.onquery.signals.Signal"/></rewinder>
 		<attach public="1" set="method" line="13" override="1"><f a="signal">
 	<c path="com.onquery.signals.Signal"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></attach>
-		<match public="1" set="method" line="19"><f a="event">
-	<d/>
-	<x path="Bool"/>
-</f></match>
-		<new public="1" set="method" line="10"><f a=""><x path="Void"/></f></new>
+		<new public="1" set="method" line="9"><f a=""><x path="Void"/></f></new>
 	</class>
 	<class path="com.onquery.pseudos.PausePseudo" params="" file="src/com/onquery/pseudos/PausePseudo.hx">
 		<extends path="com.onquery.pseudos.Pseudo"/>
@@ -1208,14 +1166,20 @@
 		<onPause set="method" line="36"><f a=""><x path="Void"/></f></onPause>
 		<new public="1" set="method" line="13"><f a=""><x path="Void"/></f></new>
 	</class>
-	<class path="com.onquery.pseudos.RewindPseudo" params="" file="src/com/onquery/pseudos/RewindPseudo.hx">
+	<class path="com.onquery.pseudos.DelayPseudo" params="" file="src/com/onquery/pseudos/DelayPseudo.hx">
 		<extends path="com.onquery.pseudos.Pseudo"/>
-		<rewinder><c path="com.onquery.signals.Signal"/></rewinder>
+		<implements path="com.onquery.filters.Filter"/>
+		<_signal><c path="com.onquery.signals.Signal"/></_signal>
+		<delayed><x path="Bool"/></delayed>
 		<attach public="1" set="method" line="13" override="1"><f a="signal">
 	<c path="com.onquery.signals.Signal"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></attach>
-		<new public="1" set="method" line="9"><f a=""><x path="Void"/></f></new>
+		<match public="1" set="method" line="19"><f a="event">
+	<d/>
+	<x path="Bool"/>
+</f></match>
+		<new public="1" set="method" line="10"><f a=""><x path="Void"/></f></new>
 	</class>
 	<class path="com.onquery.pseudos.ThrottlePseudo" params="" file="src/com/onquery/pseudos/ThrottlePseudo.hx">
 		<extends path="com.onquery.pseudos.Pseudo"/>
@@ -1234,19 +1198,112 @@
 		<onThrottle set="method" line="30"><f a=""><x path="Void"/></f></onThrottle>
 		<new public="1" set="method" line="12"><f a=""><x path="Void"/></f></new>
 	</class>
+	<class path="com.onquery.core.SignalToken" params="" file="src/com/onquery/core/SignalToken.hx">
+		<currentTime line="9" static="1"><x path="Float"/></currentTime>
+		<count public="1"><x path="Float"/></count>
+		<time public="1"><x path="Float"/></time>
+		<_signal><c path="com.onquery.signals.Signal"/></_signal>
+		<getSignal public="1" set="method" line="17"><f a=""><c path="com.onquery.signals.Signal"/></f></getSignal>
+		<setSignal public="1" set="method" line="19"><f a="value">
+	<c path="com.onquery.signals.Signal"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></setSignal>
+		<refresh set="method" line="30"><f a="?event" v="null">
+	<d/>
+	<x path="Void"/>
+</f></refresh>
+		<reset public="1" set="method" line="35"><f a="?event" v="null">
+	<d/>
+	<x path="Void"/>
+</f></reset>
+		<new public="1" set="method" line="11"><f a="?signal" v="null">
+	<c path="com.onquery.signals.Signal"/>
+	<x path="Void"/>
+</f></new>
+	</class>
+	<class path="com.onquery.core.Connector" params="" file="src/com/onquery/core/Connector.hx">
+		<OPEN public="1" line="20" static="1"><c path="com.onquery.core.Connector"/></OPEN>
+		<CLOSE public="1" line="21" static="1"><c path="com.onquery.core.Connector"/></CLOSE>
+		<NOT public="1" line="23" static="1"><c path="com.onquery.core.Connector"/></NOT>
+		<OR public="1" line="33" static="1"><c path="com.onquery.core.Connector"/></OR>
+		<AND public="1" line="45" static="1"><c path="com.onquery.core.Connector"/></AND>
+		<NEXT public="1" line="57" static="1"><c path="com.onquery.core.Connector"/></NEXT>
+		<registry public="1" line="72" static="1"><c path="haxe.ds.StringMap"><c path="com.onquery.core.Connector"/></c></registry>
+		<precedence public="1"><x path="Int"/></precedence>
+		<argc public="1"><x path="Int"/></argc>
+		<leftAssociative public="1"><x path="Bool"/></leftAssociative>
+		<connect public="1"><f a="">
+	<c path="List"><c path="com.onquery.core.SignalToken"/></c>
+	<c path="com.onquery.core.SignalToken"/>
+</f></connect>
+		<new public="1" set="method" line="12"><f a="connect:?argc:?precedence:?leftAssociative" v=":0:0:false">
+	<f a="">
+		<c path="List"><c path="com.onquery.core.SignalToken"/></c>
+		<c path="com.onquery.core.SignalToken"/>
+	</f>
+	<x path="Int"/>
+	<x path="Int"/>
+	<x path="Bool"/>
+	<x path="Void"/>
+</f></new>
+	</class>
+	<class path="js.Boot" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/Boot.hx">
+		<getClass get="inline" set="null" line="70" static="1"><f a="o">
+	<d/>
+	<d/>
+</f></getClass>
+		<__string_rec set="method" line="78" static="1">
+			<f a="o:s">
+				<a>
+					<toString set="null"><f a=""><c path="String"/></f></toString>
+					<length set="null"><x path="Int"/></length>
+					<hasOwnProperty set="null"><f a="">
+	<c path="String"/>
+	<x path="Bool"/>
+</f></hasOwnProperty>
+					<__enum__ set="null"><x path="Bool"/></__enum__>
+				</a>
+				<c path="String"/>
+				<c path="String"/>
+			</f>
+			<meta><m n=":ifFeature"><e>"has_enum"</e></m></meta>
+		</__string_rec>
+		<__interfLoop set="method" line="150" static="1"><f a="cc:cl">
+	<d/>
+	<d/>
+	<x path="Bool"/>
+</f></__interfLoop>
+		<__instanceof set="method" line="165" static="1">
+			<f a="o:cl">
+				<d/>
+				<d/>
+				<x path="Bool"/>
+			</f>
+			<meta><m n=":ifFeature"><e>"typed_catch"</e></m></meta>
+		</__instanceof>
+		<__cast set="method" line="201" static="1">
+			<f a="o:t">
+				<d/>
+				<d/>
+				<unknown/>
+			</f>
+			<meta><m n=":ifFeature"><e>"typed_cast"</e></m></meta>
+		</__cast>
+		<meta><m n=":keep"/></meta>
+	</class>
 	<class path="com.onquery.signals.CoreSignal" params="" file="src/com/onquery/signals/CoreSignal.hx">
 		<implements path="com.onquery.collections.ListenersCollection"/>
 		<listeners public="1"><c path="com.onquery.collections.ListenersCollection"/></listeners>
-		<_context><c path="com.onquery.Context"/></_context>
+		<_context><c path="com.onquery.SignalContext"/></_context>
 		<_type><c path="String"/></_type>
-		<getContext public="1" set="method" line="20"><f a=""><c path="com.onquery.Context"/></f></getContext>
-		<getTarget public="1" set="method" line="21"><f a=""><t path="com.onquery.EventTarget"/></f></getTarget>
-		<getType public="1" set="method" line="23"><f a=""><c path="String"/></f></getType>
-		<setType public="1" set="method" line="24"><f a="value">
+		<getContext public="1" set="method" line="21"><f a=""><c path="com.onquery.SignalContext"/></f></getContext>
+		<getTarget public="1" set="method" line="22"><f a=""><t path="com.onquery.EventTarget"/></f></getTarget>
+		<getType public="1" set="method" line="24"><f a=""><c path="String"/></f></getType>
+		<setType public="1" set="method" line="25"><f a="value">
 	<c path="String"/>
 	<c path="String"/>
 </f></setType>
-		<addListener public="1" set="method" line="27">
+		<addListener public="1" set="method" line="28">
 			<f a="listener:?options" v=":null">
 				<t path="com.onquery.EventListener"/>
 				<d/>
@@ -1254,26 +1311,26 @@
 			</f>
 			<haxe_doc>@inheritDoc</haxe_doc>
 		</addListener>
-		<removeListener public="1" set="method" line="32">
+		<removeListener public="1" set="method" line="33">
 			<f a="listener">
 				<t path="com.onquery.EventListener"/>
 				<x path="Void"/>
 			</f>
 			<haxe_doc>@inheritDoc</haxe_doc>
 		</removeListener>
-		<removeAllListeners public="1" set="method" line="37">
+		<removeAllListeners public="1" set="method" line="38">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>@inheritDoc</haxe_doc>
 		</removeAllListeners>
-		<invokeListeners public="1" set="method" line="42">
+		<invokeListeners public="1" set="method" line="43">
 			<f a="event">
 				<t path="com.onquery.Event"/>
 				<x path="Void"/>
 			</f>
 			<haxe_doc>@inheritDoc</haxe_doc>
 		</invokeListeners>
-		<new public="1" set="method" line="14"><f a="c">
-	<c path="com.onquery.Context"/>
+		<new public="1" set="method" line="15"><f a="c">
+	<c path="com.onquery.SignalContext"/>
 	<x path="Void"/>
 </f></new>
 	</class>
@@ -1293,37 +1350,112 @@
 	<x path="Void"/>
 </f></invokeListeners>
 		<new public="1" set="method" line="10"><f a="c">
-	<c path="com.onquery.Context"/>
+	<c path="com.onquery.SignalContext"/>
+	<x path="Void"/>
+</f></new>
+	</class>
+	<class path="com.onquery.signals.CombinedSignal" params="" file="src/com/onquery/signals/CombinedSignal.hx">
+		<extends path="com.onquery.signals.Signal"/>
+		<_rewinder><c path="com.onquery.signals.Signal"/></_rewinder>
+		<setRewinder public="1" set="method" line="11"><f a="value">
+	<c path="com.onquery.signals.Signal"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></setRewinder>
+		<rewind public="1" set="method" line="22"><f a="?event" v="null">
+	<d/>
+	<x path="Void"/>
+</f></rewind>
+		<new public="1" set="method" line="26"><f a="c">
+	<c path="com.onquery.SignalContext"/>
+	<x path="Void"/>
+</f></new>
+		<haxe_doc>* ...
+ * @author Ayoub Kaanich</haxe_doc>
+	</class>
+	<class path="com.onquery.signals.AllSignal" params="" file="src/com/onquery/signals/AllSignal.hx">
+		<extends path="com.onquery.signals.CombinedSignal"/>
+		<build public="1" set="method" line="12" static="1"><f a="p:c">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></build>
+		<queue><c path="List"><c path="com.onquery.core.SignalToken"/></c></queue>
+		<rewind public="1" set="method" line="35" override="1"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></rewind>
+		<recheck set="method" line="41"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></recheck>
+		<new set="method" line="25"><f a="c:t">
+	<c path="com.onquery.SignalContext"/>
+	<c path="List"><c path="com.onquery.signals.Signal"/></c>
+	<x path="Void"/>
+</f></new>
+	</class>
+	<class path="com.onquery.signals.SequenceSignal" params="" file="src/com/onquery/signals/SequenceSignal.hx">
+		<extends path="com.onquery.signals.CombinedSignal"/>
+		<build public="1" set="method" line="10" static="1"><f a="p:c">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></build>
+		<queue><c path="Array"><c path="com.onquery.signals.Signal"/></c></queue>
+		<index public="1"><x path="Int"/></index>
+		<rewind public="1" set="method" line="30" override="1"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></rewind>
+		<reset set="method" line="35"><f a=""><x path="Void"/></f></reset>
+		<nextSignal set="method" line="42"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></nextSignal>
+		<dispose public="1" set="method" line="54" override="1"><f a="?event" v="null">
+	<t path="com.onquery.Event"/>
+	<x path="Void"/>
+</f></dispose>
+		<new set="method" line="24"><f a="c:t">
+	<c path="com.onquery.SignalContext"/>
+	<c path="Array"><c path="com.onquery.signals.Signal"/></c>
 	<x path="Void"/>
 </f></new>
 	</class>
 	<class path="com.onquery.signals.ConnectedSignal" params="" file="src/com/onquery/signals/ConnectedSignal.hx">
-		<extends path="com.onquery.signals.Signal"/>
+		<extends path="com.onquery.signals.CombinedSignal"/>
 		<queue public="1"><c path="List"><d/></c></queue>
-		<_rewinder><c path="com.onquery.signals.Signal"/></_rewinder>
-		<setRewinder public="1" set="method" line="15"><f a="value">
-	<c path="com.onquery.signals.Signal"/>
-	<c path="com.onquery.signals.Signal"/>
-</f></setRewinder>
-		<rewind public="1" set="method" line="33"><f a="?event" v="null">
+		<rewind public="1" set="method" line="18" override="1"><f a="?event" v="null">
 	<d/>
 	<x path="Void"/>
 </f></rewind>
-		<recheck public="1" set="method" line="41"><f a="?event" v="null">
+		<recheck public="1" set="method" line="26"><f a="?event" v="null">
 	<d/>
 	<x path="Void"/>
 </f></recheck>
-		<reduce public="1" set="method" line="48"><f a=""><c path="com.onquery.core.SignalToken"/></f></reduce>
-		<setTokens set="method" line="93"><f a="tokens">
+		<reduce public="1" set="method" line="33"><f a=""><c path="com.onquery.core.SignalToken"/></f></reduce>
+		<setTokens set="method" line="78"><f a="tokens">
 	<c path="List"><d/></c>
 	<x path="Void"/>
 </f></setTokens>
-		<new public="1" set="method" line="26"><f a="c:t">
-	<c path="com.onquery.Context"/>
+		<new public="1" set="method" line="12"><f a="c:t">
+	<c path="com.onquery.SignalContext"/>
 	<c path="List"><d/></c>
 	<x path="Void"/>
 </f></new>
 		<meta><m n=":expose"><e>"ConnectedSignal"</e></m></meta>
+	</class>
+	<class path="com.onquery.core.Build" params="" file="src/com/onquery/core/Build.hx">
+		<registry public="1" line="17" static="1"><c path="haxe.ds.StringMap"><t path="com.onquery.core.Builder"/></c></registry>
+		<popArg public="1" set="method" line="26" static="1"><f a="p">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="String"/>
+</f></popArg>
+		<wrap set="method" line="36" static="1"><f a="prototype:context">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></wrap>
 	</class>
 	<class path="haxe.EnumTools" params="" file="K:\Program Files\HaxeToolkit\haxe\std/haxe/EnumTools.hx" extern="1">
 		<getName public="1" params="T" get="inline" set="null" line="41" static="1">
@@ -1554,50 +1686,6 @@
 </a></this>
 		<impl><class path="haxe.ds._HashMap.HashMap_Impl_" params="" file="K:\Program Files\HaxeToolkit\haxe\std/haxe/ds/HashMap.hx" private="1" module="haxe.ds.HashMap"><meta><m n=":keep"/></meta></class></impl>
 	</abstract>
-	<class path="js.Boot" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/Boot.hx">
-		<getClass get="inline" set="null" line="70" static="1"><f a="o">
-	<d/>
-	<d/>
-</f></getClass>
-		<__string_rec set="method" line="78" static="1">
-			<f a="o:s">
-				<a>
-					<toString set="null"><f a=""><c path="String"/></f></toString>
-					<length set="null"><x path="Int"/></length>
-					<hasOwnProperty set="null"><f a="">
-	<c path="String"/>
-	<x path="Bool"/>
-</f></hasOwnProperty>
-					<__enum__ set="null"><x path="Bool"/></__enum__>
-				</a>
-				<c path="String"/>
-				<c path="String"/>
-			</f>
-			<meta><m n=":ifFeature"><e>"has_enum"</e></m></meta>
-		</__string_rec>
-		<__interfLoop set="method" line="150" static="1"><f a="cc:cl">
-	<d/>
-	<d/>
-	<x path="Bool"/>
-</f></__interfLoop>
-		<__instanceof set="method" line="165" static="1">
-			<f a="o:cl">
-				<d/>
-				<d/>
-				<x path="Bool"/>
-			</f>
-			<meta><m n=":ifFeature"><e>"typed_catch"</e></m></meta>
-		</__instanceof>
-		<__cast set="method" line="201" static="1">
-			<f a="o:t">
-				<d/>
-				<d/>
-				<unknown/>
-			</f>
-			<meta><m n=":ifFeature"><e>"typed_cast"</e></m></meta>
-		</__cast>
-		<meta><m n=":keep"/></meta>
-	</class>
 	<class path="js.html.EventTarget" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/EventTarget.hx" extern="1">
 		<addEventListener public="1" set="method"><f a="type:listener:?useCapture">
 	<c path="String"/>

@@ -2,6 +2,7 @@
 ## OnQuery
 #################
 
+docs/*
 build/*
 test/*
 

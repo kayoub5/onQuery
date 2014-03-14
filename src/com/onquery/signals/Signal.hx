@@ -7,7 +7,7 @@ class Signal extends CoreSignal{
 
 	public var filters:List<Filter>;
 
-	public function new(c:Context){
+	public function new(c:SignalContext){
 		super(c);
 		filters=new List<Filter>();
 		

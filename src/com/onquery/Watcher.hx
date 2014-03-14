@@ -5,8 +5,8 @@ import com.onquery.core.*;
 import com.onquery.OnQuery;
 import haxe.ds.StringMap;
 class Watcher {
-	private var context:Context;
-	public function new(c:Context){
+	private var context:SignalContext;
+	public function new(c:SignalContext){
 		this.context=c;
 		c.set('_watcher_',this);
 	}
@@ -29,7 +29,7 @@ class Watcher {
 	}
 
 	public function use(data:StringMap<Dynamic>):Watcher{
-		var c:Context=new Context();
+		var c:SignalContext=new SignalContext();
 		for(i in data.keys()){
 			c.set(i,data.get(i));
 		}

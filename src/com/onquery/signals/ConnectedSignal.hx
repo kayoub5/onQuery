@@ -5,32 +5,17 @@ import com.onquery.core.*;
 import com.onquery.OnQuery;
 
 @:expose("ConnectedSignal")
-class ConnectedSignal extends Signal{
+class ConnectedSignal extends CombinedSignal{
 
 	public var queue:List<Dynamic>;
 	
-	private var _rewinder:Signal;
-
-
-	public function setRewinder(value:Signal):Signal{
-		if(_rewinder!=null){
-			_rewinder.removeListener(rewind);
-		}
-		_rewinder=value;
-		if(_rewinder!=null){
-			_rewinder.addListener(rewind);
-		}
-		return _rewinder;
-	}
-
-	public function new(c:Context,t:List<Dynamic>) {
+	public function new(c:SignalContext,t:List<Dynamic>) {
 		super(c);
-		setRewinder(this);
 		queue=new List<Dynamic>();
 		setTokens(t);
 	}
 
-	public function rewind(event:Dynamic=null){
+	override public function rewind(event:Dynamic = null) {
 		for (token in  queue){
 			if(Std.is(token,SignalToken)){
 				token.reset();

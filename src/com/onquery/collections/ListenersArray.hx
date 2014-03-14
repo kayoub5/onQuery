@@ -19,6 +19,7 @@ class ListenersArray implements ListenersCollection{
 		if(options==null){
 			options={};
 		}
+		removeListener(listener);
 		var slot:Slot=new Slot(listener,options);
 		list.add(slot);
 	}

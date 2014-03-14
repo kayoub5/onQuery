@@ -9,7 +9,7 @@ import com.onquery.signals.*;
 //@:build(com.onquery.Macro.build()) 
 class OnQuery{
 
-	static public var globalContext:Context= new Context([
+	static public var globalContext:SignalContext= new SignalContext([
 		'version' => '0.0.0'
 		]);
 
@@ -21,11 +21,11 @@ class OnQuery{
 		return globalContext.get('_watcher_').on(query);
 	}
 
-	static public function getContext(target:EventTarget):com.onquery.Context{
+	static public function getContext(target:EventTarget):com.onquery.SignalContext{
 		var e:Dynamic=new ContextEvent('_context_');
 		target.dispatchEvent(e);
 		if(e.context==null){
-			var c:Context=new Context();
+			var c:SignalContext=new SignalContext();
 			c.setParent(globalContext);
 			c.set('_target_',target);
 			var w:Watcher=new Watcher(c);
