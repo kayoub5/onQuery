@@ -1002,11 +1002,11 @@
 	<d/>
 	<x path="Void"/>
 </f></addListener>
-		<invokeListeners public="1" set="method" line="26"><f a="event">
+		<invokeListeners public="1" set="method" line="27"><f a="event">
 	<d/>
 	<x path="Void"/>
 </f></invokeListeners>
-		<removeAllListeners public="1" set="method" line="38"><f a=""><x path="Void"/></f></removeAllListeners>
+		<removeAllListeners public="1" set="method" line="39"><f a=""><x path="Void"/></f></removeAllListeners>
 		<new public="1" set="method" line="8"><f a=""><x path="Void"/></f></new>
 	</class>
 	<class path="com.onquery.collections.Slot" params="" file="src/com/onquery/collections/Slot.hx">
@@ -1372,25 +1372,51 @@
 		<haxe_doc>* ...
  * @author Ayoub Kaanich</haxe_doc>
 	</class>
-	<class path="com.onquery.signals.SequenceSignal" params="" file="src/com/onquery/signals/SequenceSignal.hx">
+	<class path="com.onquery.signals.AllSignal" params="" file="src/com/onquery/signals/AllSignal.hx">
 		<extends path="com.onquery.signals.CombinedSignal"/>
-		<build public="1" set="method" line="9" static="1"><f a="p:c">
+		<build public="1" set="method" line="12" static="1"><f a="p:c">
 	<c path="com.onquery.core.SignalPrototype"/>
 	<c path="com.onquery.SignalContext"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></build>
-		<queue public="1"><c path="Array"><c path="com.onquery.signals.Signal"/></c></queue>
-		<index public="1"><x path="Int"/></index>
-		<rewind public="1" set="method" line="27" override="1"><f a="?e" v="null">
+		<queue><c path="List"><c path="com.onquery.core.SignalToken"/></c></queue>
+		<rewind public="1" set="method" line="35" override="1"><f a="?e" v="null">
 	<d/>
 	<x path="Void"/>
 </f></rewind>
-		<reset set="method" line="32"><f a=""><x path="Void"/></f></reset>
-		<nextSignal set="method" line="39"><f a="?e" v="null">
+		<recheck set="method" line="41"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></recheck>
+		<new set="method" line="25"><f a="c:t">
+	<c path="com.onquery.SignalContext"/>
+	<c path="List"><c path="com.onquery.signals.Signal"/></c>
+	<x path="Void"/>
+</f></new>
+	</class>
+	<class path="com.onquery.signals.SequenceSignal" params="" file="src/com/onquery/signals/SequenceSignal.hx">
+		<extends path="com.onquery.signals.CombinedSignal"/>
+		<build public="1" set="method" line="10" static="1"><f a="p:c">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></build>
+		<queue><c path="Array"><c path="com.onquery.signals.Signal"/></c></queue>
+		<index public="1"><x path="Int"/></index>
+		<rewind public="1" set="method" line="30" override="1"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></rewind>
+		<reset set="method" line="35"><f a=""><x path="Void"/></f></reset>
+		<nextSignal set="method" line="42"><f a="?e" v="null">
 	<d/>
 	<x path="Void"/>
 </f></nextSignal>
-		<new public="1" set="method" line="21"><f a="c:t">
+		<dispose public="1" set="method" line="54" override="1"><f a="?event" v="null">
+	<t path="com.onquery.Event"/>
+	<x path="Void"/>
+</f></dispose>
+		<new set="method" line="24"><f a="c:t">
 	<c path="com.onquery.SignalContext"/>
 	<c path="Array"><c path="com.onquery.signals.Signal"/></c>
 	<x path="Void"/>
