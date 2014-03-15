@@ -1,5 +1,5 @@
 # onQuery #
-_______________________________________
+
 
 ### Description ###
 onQuery is an event querying engine for JavaScript
