@@ -3,37 +3,34 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Onquery by kayoub5</title>
+    <title>on(Query) by kayoub5</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
   <body>
     <div class="wrapper">
-      <header>
-        <h1 class="header">OnQuery</h1>
-        <p class="header"></p>
-
+      <header class="without-description">
+        <h1>on(Query)</h1>
+        <p></p>
+        <p class="view"><a href="https://github.com/kayoub5/onQuery">View the Project on GitHub <small>kayoub5/onQuery</small></a></p>
         <ul>
-          <li class="download"><a class="buttons" href="https://github.com/kayoub5/OnQuery/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/kayoub5/OnQuery/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/kayoub5/OnQuery">View On GitHub</a></li>
+          <li><a href="https://github.com/kayoub5/onQuery/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kayoub5/onQuery/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kayoub5/onQuery">View On <strong>GitHub</strong></a></li>
         </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/kayoub5">kayoub5</a></p>
-
-
       </header>
       <section>
         <h1>
 <a name="onquery" class="anchor" href="#onquery"><span class="octicon octicon-link"></span></a>onQuery</h1>
 
-<hr><h3>
+<h3>
 <a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h3>
 
 <p>onQuery is an event querying engine for JavaScript</p>
@@ -41,7 +38,7 @@
 <h3>
 <a name="status" class="anchor" href="#status"><span class="octicon octicon-link"></span></a>STATUS</h3>
 
-<p>this library is still ALPHA so use it with caution. </p>
+<p>this library is still BETA so use it with caution. </p>
 
 <h3>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h3>
@@ -56,19 +53,32 @@
 <li>altering Event behaviour <code>event:pause(3000)</code>
 </li>
 </ul><h3>
-<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h3>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
 
 <div class="highlight highlight-javascript"><pre>
+    <span class="c1">//logging function</span>
     <span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
     <span class="p">}</span>
+
+    <span class="c1">//creating an events watcher</span>
     <span class="kd">var</span> <span class="nx">w</span><span class="o">=</span><span class="nx">OnQuery</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nb">window</span><span class="p">);</span>
-    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'*:(mousedown&gt;mousemove):rewind(mouseup)'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span><span class="c1">//dragging</span>
-    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'click[shiftKey==true]'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span><span class="c1">//click+shif</span>
+
+    <span class="c1">//dragging= mousedown then mousemove,if a mouseup interept try again</span>
+    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'*:(mousedown&gt;mousemove):rewind(mouseup)'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
+
+    <span class="c1">//click while holding shift key</span>
+    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'click[shiftKey==true]'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
+
+    <span class="c1">//either a click or keydown</span>
+    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'click + keydown'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
+
+    <span class="c1">//after the mouse stop moving for 10 sec = 10000 milliseconds</span>
+    <span class="nx">watch</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'mousemove:pause(10000)'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
 
 </pre></div>
 
-<hr><h3>
+<h3>
 <a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h3>
 
 <p>Ayoub Kaanich <a href="mailto:kayoub5@gmail.com">kayoub5@gmail.com</a></p>
@@ -78,11 +88,12 @@
 
 <p><a href="http://creativecommons.org/licenses/by-nc-nd/3.0/">Attribution-NonCommercial-NoDerivs 3.0 Unported</a></p>
       </section>
-      <footer>
-        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
     </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/kayoub5">kayoub5</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+    
   </body>
 </html>
