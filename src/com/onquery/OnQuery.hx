@@ -3,7 +3,6 @@ package com.onquery;
 import com.onquery.*;
 import com.onquery.core.*;
 import com.onquery.signals.*;
-import js.JQuery;
 
 @:expose("OnQuery")
 class OnQuery{
@@ -11,11 +10,15 @@ class OnQuery{
 	static public var globalContext:SignalContext= new SignalContext([
 		'version' => '0.0.0'
 		]);
+	static public var targetBuilder:Dynamic->EventTarget;
 	/**
 	 * available threw the window object.
 	 * return an instance of a Watcher that moniter the target, watch() will return the same instance every time.
 	 */
-	static public function watch(target:EventTarget):Watcher{
+	static public function watch(target:EventTarget):Watcher {
+		if (Std.is(target, String)) {
+			target = targetBuilder(target);
+		}
 		return getContext(target).get('_watcher_');
 	}
 
@@ -52,12 +55,18 @@ class OnQuery{
 		window.watch = watch;
 		window.when = when;
 		var jQuery = window.jQuery;
-		if (jQuery!=null) {
+		if (jQuery != null) {
+			targetBuilder = untyped jQuery;
 			jQuery.fn.dispatchEvent = jQuery.fn.trigger;
-			jQuery.fn.addEventListener = jQuery.fn.on;
-			jQuery.fn.removeEventListener = jQuery.fn.off;
+			jQuery.fn.addEventListener = function(type:String, listener:EventListener, useCapture:Bool = false) {
+				var o = untyped __js__("this");
+				o.on(type, listener);
+			}
+			jQuery.fn.removeEventListener = function(type:String, listener:EventListener, useCapture:Bool = false) {
+				var o = untyped __js__("this");
+				o.off(type, listener);
+			}
 		}
-		
 		#end
 	}
 	

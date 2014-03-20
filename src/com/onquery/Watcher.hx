@@ -28,10 +28,10 @@ class Watcher {
 		on(query).removeListener(handler);
 	}
 
-	public function use(data:StringMap<Dynamic>):Watcher{
-		var c:SignalContext=new SignalContext();
-		for(i in data.keys()){
-			c.set(i,data.get(i));
+	public function use(data:Dynamic):Watcher{
+		var c:SignalContext = new SignalContext();
+		for(i in Reflect.fields(data)){
+			c.set(i,Reflect.field(data,i));
 		}
 		c.setParent(context);
 		return new Watcher(c);
