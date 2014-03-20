@@ -139,6 +139,9 @@ Std.parseInt = function(x) {
 	if(isNaN(v)) return null;
 	return v;
 };
+Std.parseFloat = function(x) {
+	return parseFloat(x);
+};
 var haxe = {};
 haxe.ds = {};
 haxe.ds.StringMap = function() {
@@ -249,6 +252,13 @@ com.onquery.OnQuery.main = function() {
 	new com.onquery.Watcher(com.onquery.OnQuery.globalContext);
 	var $window = window;
 	$window.watch = com.onquery.OnQuery.watch;
+	$window.when = com.onquery.OnQuery.when;
+	var jQuery = $window.jQuery;
+	if(jQuery != null) {
+		jQuery.fn.dispatchEvent = jQuery.fn.trigger;
+		jQuery.fn.addEventListener = jQuery.fn.on;
+		jQuery.fn.removeEventListener = jQuery.fn.off;
+	}
 };
 com.onquery.Watcher = function(c) {
 	this.context = c;
@@ -430,7 +440,10 @@ com.onquery.filters.Filter.prototype = {
 com.onquery.filters.PropertyFilter = function(name,operator,value) {
 	this.name = name;
 	this.operator = operator;
-	this.value = value;
+	var eString = new EReg("\"(.*)\"","");
+	var v = value;
+	if(v == "true") v = true; else if(v == "false") v = false; else if(!Math.isNaN(v)) v = Std.parseFloat(v); else if(eString.match(v)) v = eString.matched(1);
+	this.value = v;
 };
 com.onquery.filters.PropertyFilter.__name__ = true;
 com.onquery.filters.PropertyFilter.__interfaces__ = [com.onquery.filters.Filter];
@@ -1055,6 +1068,7 @@ haxe.Timer.prototype = {
 	}
 	,__class__: haxe.Timer
 };
+function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 Math.NaN = Number.NaN;
@@ -1077,6 +1091,8 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
+var q = window.jQuery;
+js.JQuery = q;
 com.onquery.OnQuery.globalContext = new com.onquery.SignalContext((function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
@@ -1159,5 +1175,3 @@ com.onquery.core.Build.registry = (function($this) {
 }(this));
 com.onquery.OnQuery.main();
 })(typeof window != "undefined" ? window : exports);
-
-//# sourceMappingURL=onquery.js.map
