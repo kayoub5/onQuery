@@ -1,0 +1,17 @@
+<div class="form-group">
+	<label class="control-label" for="ex-filter">Only Clicks while holding Shift Key will work</label>
+	<button class="btn btn-default" id="ex-filter">Button</button>
+</div>
+<script>
+	$(function(){
+		var elm=document.getElementById('ex-filter');
+		watch(elm).bind('click[shiftKey=false]',function(e){
+			$(elm).removeClass('btn-success');
+			$(elm).addClass('btn-danger');
+		});
+		watch(elm).bind('click[shiftKey=true]',function(e){
+			$(elm).addClass('btn-success');
+			$(elm).removeClass('btn-danger');
+		});
+	});
+</script>

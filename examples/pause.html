@@ -1,0 +1,15 @@
+<div class="form-group">
+	<label class="control-label" for="ex-pause">The button will turn green after 3 sec of inactivity</label>
+	<button class="btn btn-default" id="ex-pause">Button</button>
+</div>
+<script>
+	$(function(){
+		var elm=document.getElementById('ex-pause');
+		watch(elm).bind('click:pause(3000)',function(e){
+			$(elm).addClass('btn-success');
+		});
+		watch(elm).bind('click',function(e){
+			$(elm).removeClass('btn-success');
+		});
+	});
+</script>

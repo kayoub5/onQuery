@@ -1,111 +1,142 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>on(Query) by kayoub5</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-  </head>
-  <body>
-
-      <header>
-        <h1>on(Query)</h1>
-        <p></p>
-      </header>
-
-      <div id="banner">
-        <span id="logo"></span>
-
-        <a href="https://github.com/kayoub5/onQuery" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/kayoub5/onQuery/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/kayoub5/onQuery/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
-
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
-      <section>
-        <h1>
-<a name="onquery" class="anchor" href="#onquery"><span class="octicon octicon-link"></span></a>onQuery</h1>
-
-<h3>
-<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h3>
-
-<p>onQuery is an event querying engine for JavaScript</p>
-
-<h3>
-<a name="status" class="anchor" href="#status"><span class="octicon octicon-link"></span></a>STATUS</h3>
-
-<p>this library is still BETA so use it with caution. </p>
-
-<h3>
-<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h3>
-
-<ul>
-<li>Event filtering
-<code>event[foo="bar"]</code>
-</li>
-<li>Event chaining 
-<code>event1 &gt; event2</code>
-</li>
-<li>altering Event behaviour <code>event:pause(3000)</code>
-</li>
-</ul><h3>
-<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
-
-<div class="highlight highlight-javascript"><pre>
-    <span class="c1">//logging function</span>
-    <span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="c1">//creating an events watcher</span>
-    <span class="kd">var</span> <span class="nx">w</span><span class="o">=</span><span class="nx">OnQuery</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nb">window</span><span class="p">);</span>
-
-    <span class="c1">//dragging= mousedown then mousemove,if a mouseup interept try again</span>
-    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'*:(mousedown&gt;mousemove):rewind(mouseup)'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
-
-    <span class="c1">//click while holding shift key</span>
-    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'click[shiftKey==true]'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
-
-    <span class="c1">//either a click or keydown</span>
-    <span class="nx">w</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'click + keydown'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
-
-    <span class="c1">//after the mouse stop moving for 10 sec = 10000 milliseconds</span>
-    <span class="nx">watch</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'mousemove:pause(10000)'</span><span class="p">,</span><span class="nx">log</span><span class="p">);</span>
-
-</pre></div>
-
-<h3>
-<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h3>
-
-<p>Ayoub Kaanich <a href="mailto:kayoub5@gmail.com">kayoub5@gmail.com</a></p>
-
-<h3>
-<a name="licence" class="anchor" href="#licence"><span class="octicon octicon-link"></span></a>Licence</h3>
-
-<p><a href="http://creativecommons.org/licenses/by-nc-nd/3.0/">Attribution-NonCommercial-NoDerivs 3.0 Unported</a></p>
-      </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/kayoub5">kayoub5</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
-      </footer>
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
-  </body>
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+		<title>on(Query) by Ayoub Kaanich</title>
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/prettify.css">
+		<link rel="stylesheet" href="css/bootswatch.css">
+		
+		
+		<script src="js/handlebars.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/onquery.js"></script>
+		<script src="js/bootstrap.js"></script>
+		
+		<!--[if lt IE 9]>
+			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+		
+	</head>
+	<body>
+		
+		<header class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand"><img src="images/logo.png" height="100%"/></a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="docs">Documentation</a>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Download <span class="caret"></span></a>
+							<ul class="dropdown-menu" aria-labelledby="download">
+								<li><a href="https://github.com/kayoub5/onQuery/zipball/master">ZIP</a></li>
+								<li class="divider"></li>
+								<li><a href="https://github.com/kayoub5/onQuery/tarball/master">TAR</a></li>
+							</ul>
+						</li>
+					</ul>
+					
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="https://github.com/kayoub5/onQuery" target="_blank"><img src="images/octocat-logo.png" width="24"> View On GitHub</a></li>
+					</ul>
+					
+				</div>
+			</div>
+		</header>
+		
+		<div class="container">
+			<div class="page-header jumbotron">
+				<div class="row">
+					<div class="col-lg-6">
+						<h1>Advanced Event querying engine</h1>
+					</div>
+					<div class="col-lg-6">
+						<img src="images/logo.png" width="100%"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<h2>Status</h2>
+				
+				<div class="alert alert-warning">
+					<h4>Warning!</h4>
+					<p>This library is still BETA so use it with caution.</p>
+				</div>
+				
+			</div>
+			
+			<div class="col-lg-12">
+				<h2>Description</h2>
+				
+				<p>onQuery is an event querying engine for JavaScript</p>
+				
+			</div>
+			
+			<div class="col-lg-12">
+				<h2>Features</h2>
+				<h5><ul>
+					<li>Event filtering</li>
+					<li>Event chaining</li>
+					<li>Altering Event behaviour</li>
+				</ul></h5>
+			</div>
+			
+			<div class="col-lg-12">
+				<h2>Examples</h2>
+				<div id="examples"></div>
+			</div>
+			
+			<div class="col-lg-12">
+				<h2>Author</h2>
+				<p>Ayoub Kaanich <a href="mailto:kayoub5@gmail.com">kayoub5@gmail.com</a></p>
+			</div>
+			<div class="col-lg-12">
+				<h2>Licence</h2>
+				<p><a href="http://creativecommons.org/licenses/by-nc-nd/3.0/">Attribution-NonCommercial-NoDerivs 3.0 Unported</a></p>
+			</div>
+			
+		</div>
+		
+		<footer>
+			<hr>
+			<div class="well-lg">
+				<p>Project maintained by <a href="https://github.com/kayoub5">Ayoub Kaanich</a></p>
+				<p><small>Hosted on GitHub Pages</small></p>
+			</div>
+		</footer>
+		<script src="js/prettify.js"></script>
+		<script>
+			var examples=[
+			{name:'basic',title:'Basic usage'},
+			{name:'filters',title:'Filters'},
+			{name:'pause',title:'Event Pause'},
+			{name:'drag',title:'Dragging'}
+			]
+			
+			$.ajax('examples/template.html').done(function(tmpl){
+			var template=Handlebars.compile(tmpl);
+			function nextExample(){
+				if(!examples.length)return;
+				var self=examples.shift();
+				$.ajax('examples/'+self.name+'.html').done(function(data){
+					self.data=data;
+					var elm=$(template(self));
+					elm.data('html',elm.html());
+					$('#examples').append(elm);
+					prettyPrint();
+					nextExample();
+				})
+			}
+			nextExample();
+			})
+			prettyPrint();
+		</script>
+	</body>
 </html>
