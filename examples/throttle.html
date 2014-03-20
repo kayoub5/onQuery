@@ -12,12 +12,16 @@
 		var t=document.getElementById('ex-throttle');
 		var d=document.getElementById('ex-throttle-d');
 		var v=document.getElementById('ex-throttle-v');
-		//we render less than 50 frames per seconds, so mouse moves should have 20 ms between them
-		watch(t).bind('mousemove:throttle(20)',function(e){
+		
+		//for reference
+		watch(t).bind('mousemove',function(e){
 			d.value++;
 		});
-		watch(t).bind('mousemove',function(e){
+		
+		//we render less than 50 frames per seconds, so mouse moves should have 20 ms between them
+		watch(t).bind('mousemove:throttle(20)',function(e){
 			v.value++;
 		});
+		
 	});
 </script>
