@@ -1,1 +1,8 @@
- 
+language: node_js
+
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install haxe -y
+
+script:
+  - haxe -cp src -js dist/js/onquery.js -main com.onquery.OnQuery -xml dist/haxedoc.xml
