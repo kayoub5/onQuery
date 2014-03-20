@@ -1,12 +1,17 @@
 <div id="ex-basic">Hover me</div>
 <script>
 	$(function(){
+		//with no jQuery
 		var elm=document.getElementById('ex-basic');
 		watch(elm).bind('mouseover',function(){
 			$(elm).css('background-color','#AA00AA');
 		});
+	});
+	$(function(){
+		//with jQuery
+		var elm=$('#ex-basic');
 		watch(elm).bind('mouseout',function(){
-			$(elm).css('background-color','');
+			elm.css('background-color','');
 		});
 	});
 </script>

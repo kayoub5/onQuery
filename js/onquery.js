@@ -128,6 +128,16 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
+Reflect.fields = function(o) {
+	var a = [];
+	if(o != null) {
+		var hasOwnProperty = Object.prototype.hasOwnProperty;
+		for( var f in o ) {
+		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) a.push(f);
+		}
+	}
+	return a;
+};
 var Std = function() { };
 Std.__name__ = true;
 Std.string = function(s) {
@@ -228,6 +238,7 @@ com.onquery.SignalContext.prototype = $extend(haxe.ds.StringMap.prototype,{
 com.onquery.OnQuery = $hx_exports.OnQuery = function() { };
 com.onquery.OnQuery.__name__ = true;
 com.onquery.OnQuery.watch = function(target) {
+	if(typeof(target) == "string") target = com.onquery.OnQuery.targetBuilder(target);
 	return com.onquery.OnQuery.getContext(target).get("_watcher_");
 };
 com.onquery.OnQuery.when = function(query) {
@@ -255,9 +266,18 @@ com.onquery.OnQuery.main = function() {
 	$window.when = com.onquery.OnQuery.when;
 	var jQuery = $window.jQuery;
 	if(jQuery != null) {
+		com.onquery.OnQuery.targetBuilder = jQuery;
 		jQuery.fn.dispatchEvent = jQuery.fn.trigger;
-		jQuery.fn.addEventListener = jQuery.fn.on;
-		jQuery.fn.removeEventListener = jQuery.fn.off;
+		jQuery.fn.addEventListener = function(type,listener,useCapture) {
+			if(useCapture == null) useCapture = false;
+			var o = this;
+			o.on(type,listener);
+		};
+		jQuery.fn.removeEventListener = function(type1,listener1,useCapture1) {
+			if(useCapture1 == null) useCapture1 = false;
+			var o1 = this;
+			o1.off(type1,listener1);
+		};
 	}
 };
 com.onquery.Watcher = function(c) {
@@ -282,10 +302,12 @@ com.onquery.Watcher.prototype = {
 	}
 	,use: function(data) {
 		var c = new com.onquery.SignalContext();
-		var $it0 = data.keys();
-		while( $it0.hasNext() ) {
-			var i = $it0.next();
-			c.set(i,data.get(i));
+		var _g = 0;
+		var _g1 = Reflect.fields(data);
+		while(_g < _g1.length) {
+			var i = _g1[_g];
+			++_g;
+			c.set(i,Reflect.field(data,i));
 		}
 		c.setParent(this.context);
 		return new com.onquery.Watcher(c);
@@ -1068,7 +1090,6 @@ haxe.Timer.prototype = {
 	}
 	,__class__: haxe.Timer
 };
-function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 Math.NaN = Number.NaN;
@@ -1091,8 +1112,6 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
-var q = window.jQuery;
-js.JQuery = q;
 com.onquery.OnQuery.globalContext = new com.onquery.SignalContext((function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();

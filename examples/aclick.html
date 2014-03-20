@@ -1,0 +1,30 @@
+<div class="form-group">
+	<label class="control-label" for="ex-aclick">Only clicks while holding "A" Key will work</label>
+	<button class="btn btn-default" id="ex-aclick">Button</button>
+</div>
+<script>
+	$(function(){
+		var w=watch($(window));
+		// a signal for "A" down
+		var aDown=w.on('keydown[which=65]+keydown[which=97]');
+		// a signal for "A" up
+		var aUp=w.on('keyup[which=65]+keyup[which=97]');
+		// the button
+		var elm=$('#ex-aclick');
+		
+		watch(elm)
+		// use external signals in the current element
+		.use({
+			aUp:aUp,
+			aDown:aDown
+		})
+		// external signals use $ prefix
+		// $this for the current signal
+		// #seq:(a b c) equivalent to #:(a>b>c)
+		// the sequence of signals will reset if
+		// an aUp happens or the sequence reach the last signal
+		.bind('#seq:($aDown click):rewind($aUp + $this)',function(e){
+			elm.toggleClass('btn-success');
+		});
+	});
+</script>

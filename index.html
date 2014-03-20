@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="css/bootstrap.css">
 		<link rel="stylesheet" href="css/prettify.css">
 		<link rel="stylesheet" href="css/bootswatch.css">
-		
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
 		
 		<script src="js/handlebars.js"></script>
 		<script src="js/jquery.js"></script>
@@ -23,7 +23,7 @@
 	</head>
 	<body>
 		
-		<header class="navbar navbar-default navbar-fixed-top">
+		<header class="navbar navbar-default navbar-fixed-top panel-default">
 			<div class="container">
 				<div class="navbar-header">
 					<a class="navbar-brand"><img src="images/logo.png" height="100%"/></a>
@@ -31,10 +31,10 @@
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li>
-							<a href="docs">Documentation</a>
+							<a href="docs"><i class="fa fa-book"></i> Documentation</a>
 						</li>
 						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Download <span class="caret"></span></a>
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-download"></i> Download <span class="caret"></span></a>
 							<ul class="dropdown-menu" aria-labelledby="download">
 								<li><a href="https://github.com/kayoub5/onQuery/zipball/master">ZIP</a></li>
 								<li class="divider"></li>
@@ -44,10 +44,11 @@
 					</ul>
 					
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="https://github.com/kayoub5/onQuery" target="_blank"><img src="images/octocat-logo.png" width="24"> View On GitHub</a></li>
+						<li><a href="https://github.com/kayoub5/onQuery" target="_blank"><i class="fa fa-github-alt"></i> View On GitHub</a></li>
 					</ul>
 					
 				</div>
+				
 			</div>
 		</header>
 		
@@ -56,8 +57,8 @@
 				<div class="row">
 					<div class="col-lg-6">
 						<h1>Advanced Event querying engine</h1>
-					</div>
-					<div class="col-lg-6">
+						</div>
+						<div class="col-lg-6">
 						<img src="images/logo.png" width="100%"/>
 					</div>
 				</div>
@@ -117,24 +118,26 @@
 			{name:'basic',title:'Basic usage'},
 			{name:'filters',title:'Filters'},
 			{name:'pause',title:'Event Pause'},
-			{name:'drag',title:'Dragging'}
+			{name:'throttle',title:'Event Throttling'},
+			{name:'drag',title:'Dragging'},
+			{name:'aclick',title:'Click while holding "A" key'}
 			]
 			
 			$.ajax('examples/template.html').done(function(tmpl){
-			var template=Handlebars.compile(tmpl);
-			function nextExample(){
-				if(!examples.length)return;
-				var self=examples.shift();
-				$.ajax('examples/'+self.name+'.html').done(function(data){
-					self.data=data;
-					var elm=$(template(self));
-					elm.data('html',elm.html());
-					$('#examples').append(elm);
-					prettyPrint();
-					nextExample();
-				})
-			}
-			nextExample();
+				var template=Handlebars.compile(tmpl);
+				function nextExample(){
+					if(!examples.length)return;
+					var self=examples.shift();
+					$.ajax('examples/'+self.name+'.html').done(function(data){
+						self.data=data;
+						var elm=$(template(self));
+						elm.data('html',elm.html());
+						$('#examples').append(elm);
+						prettyPrint();
+						nextExample();
+					})
+				}
+				nextExample();
 			})
 			prettyPrint();
 		</script>

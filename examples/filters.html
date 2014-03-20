@@ -7,11 +7,9 @@
 		var elm=document.getElementById('ex-filter');
 		watch(elm).bind('click[shiftKey=false]',function(e){
 			$(elm).removeClass('btn-success');
-			$(elm).addClass('btn-danger');
 		});
 		watch(elm).bind('click[shiftKey=true]',function(e){
 			$(elm).addClass('btn-success');
-			$(elm).removeClass('btn-danger');
 		});
 	});
 </script>

@@ -1,0 +1,23 @@
+<div class="form-group" id="ex-throttle">
+	<label class="control-label">Throttle an event : limit the number of times the event get executed in a fixed duration (for events that fires a lot like mousemove)</label>
+	<hr>
+	<label class="control-label" for="ex-throttle-d">Mouse Moves</label>
+	<output class="form-control" id="ex-throttle-d">0</output>
+	<hr>
+	<label class="control-label" for="ex-throttle-v">Throttled Mouse Moves</label>
+	<output class="form-control" id="ex-throttle-v">0</output>
+</div>
+<script>
+	$(function(){
+		var t=document.getElementById('ex-throttle');
+		var d=document.getElementById('ex-throttle-d');
+		var v=document.getElementById('ex-throttle-v');
+		//we render less than 50 frames per seconds, so mouse moves should have 20 ms between them
+		watch(t).bind('mousemove:throttle(20)',function(e){
+			d.value++;
+		});
+		watch(t).bind('mousemove',function(e){
+			v.value++;
+		});
+	});
+</script>
