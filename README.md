@@ -18,7 +18,7 @@ this library is still BETA so use it with caution.
 
 
 ### Examples ###
-[See Project page for examples](http://github/onQuery.pages/#examples)
+[See Project page for examples](http://kayoub5.github.io/onQuery/#examples)
 
 
 ### Author ###
