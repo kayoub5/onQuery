@@ -1,5 +1,5 @@
 # on(Query) #
-
+[![Build Status](https://travis-ci.org/kayoub5/onQuery.svg?branch=master)](https://travis-ci.org/kayoub5/onQuery)
 
 ### Description ###
 onQuery is an event querying engine for JavaScript
