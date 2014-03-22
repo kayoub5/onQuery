@@ -307,7 +307,9 @@ com.onquery.Watcher.prototype = {
 		while(_g < _g1.length) {
 			var i = _g1[_g];
 			++_g;
-			c.set(i,Reflect.field(data,i));
+			var d = Reflect.field(data,i);
+			if(typeof(d) == "string") d = this.on(d);
+			c.set(i,d);
 		}
 		c.setParent(this.context);
 		return new com.onquery.Watcher(c);
@@ -875,6 +877,34 @@ com.onquery.signals.CombinedSignal.prototype = $extend(com.onquery.signals.Signa
 	}
 	,__class__: com.onquery.signals.CombinedSignal
 });
+com.onquery.signals.IntervalSignal = function(c,delay) {
+	com.onquery.signals.CombinedSignal.call(this,c);
+	this.delay = delay;
+	this.rewind();
+};
+com.onquery.signals.IntervalSignal.__name__ = true;
+com.onquery.signals.IntervalSignal.build = function(p,c) {
+	return new com.onquery.signals.IntervalSignal(c,Std.parseInt(com.onquery.core.Build.popArg(p)));
+};
+com.onquery.signals.IntervalSignal.__super__ = com.onquery.signals.CombinedSignal;
+com.onquery.signals.IntervalSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
+	tick: function() {
+		this.invokeListeners(new Event("interval"));
+	}
+	,rewind: function(e) {
+		if(this.timer != null) this.timer.stop();
+		this.timer = new haxe.Timer(this.delay);
+		this.timer.run = $bind(this,this.tick);
+	}
+	,dispose: function(event) {
+		if(this.timer != null) {
+			this.timer.stop();
+			this.timer = null;
+		}
+		com.onquery.signals.CombinedSignal.prototype.dispose.call(this,event);
+	}
+	,__class__: com.onquery.signals.IntervalSignal
+});
 com.onquery.signals.AllSignal = function(c,t) {
 	com.onquery.signals.CombinedSignal.call(this,c);
 	this.queue = new List();
@@ -1185,7 +1215,7 @@ com.onquery.core.Build.registry = (function($this) {
 	var _g = new haxe.ds.StringMap();
 	_g.set("",com.onquery.core.Build.wrap);
 	_g.set("timeout",null);
-	_g.set("interval",null);
+	_g.set("interval",com.onquery.signals.IntervalSignal.build);
 	_g.set("any",null);
 	_g.set("all",com.onquery.signals.AllSignal.build);
 	_g.set("seq",com.onquery.signals.SequenceSignal.build);

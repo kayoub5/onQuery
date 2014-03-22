@@ -30,8 +30,12 @@ class Watcher {
 
 	public function use(data:Dynamic):Watcher{
 		var c:SignalContext = new SignalContext();
-		for(i in Reflect.fields(data)){
-			c.set(i,Reflect.field(data,i));
+		for (i in Reflect.fields(data)) {
+			var d:Dynamic = Reflect.field(data, i);
+			if (Std.is(d, String)) {
+				d = on(d);
+			}
+			c.set(i,d);
 		}
 		c.setParent(context);
 		return new Watcher(c);

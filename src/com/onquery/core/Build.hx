@@ -13,11 +13,10 @@ typedef Builder = SignalPrototype-> SignalContext->Signal;
 
 class Build{
 
-	
 	static public var registry:StringMap<Builder> = [
 		'' =>		wrap,
 		'timeout'	=>null,
-		'interval'	=>null,
+		'interval'	=>IntervalSignal.build,
 		'any'		=>null,
 		'all'		=>AllSignal.build,
 		'seq'		=>SequenceSignal.build
