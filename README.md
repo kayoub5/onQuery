@@ -1,6 +1,6 @@
 # on(Query) #
 [![Build Status](https://travis-ci.org/kayoub5/onQuery.svg?branch=master)](https://travis-ci.org/kayoub5/onQuery)
-
+[![Licence](http://i.creativecommons.org/l/by-nc/4.0/80x15.png)](http://creativecommons.org/licenses/by-nc/4.0/)
 ### Description ###
 onQuery is an event querying engine for JavaScript
 
@@ -26,4 +26,4 @@ Ayoub Kaanich kayoub5@gmail.com
 
 
 ### Licence ###
-[Attribution-NonCommercial-NoDerivs 3.0 Unported](http://creativecommons.org/licenses/by-nc-nd/3.0/)
+[Creative Commons Attribution-NonCommercial 4.0 International](http://creativecommons.org/licenses/by-nc/4.0/)
