@@ -365,17 +365,44 @@ com.onquery.core.Interpreter = function() { };
 com.onquery.core.Interpreter.__name__ = true;
 com.onquery.core.Interpreter.compile = function(expression,context) {
 	var input = com.onquery.core.Interpreter.interpt(expression);
-	var signal = null;
 	var output = new List();
 	var $it0 = input.iterator();
 	while( $it0.hasNext() ) {
 		var elm = $it0.next();
 		if(js.Boot.__instanceof(elm,com.onquery.core.Connector)) output.add(elm); else if(js.Boot.__instanceof(elm,com.onquery.core.SignalPrototype)) output.add(com.onquery.core.Interpreter.build(elm,context));
 	}
-	if(output.length == 1) signal = output.first(); else if(output.length > 1) {
-		signal = new com.onquery.signals.ConnectedSignal(context,output);
-		signal.setType(expression);
+	var signal = com.onquery.core.Interpreter.combine(output,context);
+	signal.setType(expression);
+	return signal;
+};
+com.onquery.core.Interpreter.combine = function(input,context) {
+	if(input.length < 2) return input.first();
+	var output = new Array();
+	var $it0 = input.iterator();
+	while( $it0.hasNext() ) {
+		var s = $it0.next();
+		if(js.Boot.__instanceof(s,com.onquery.signals.ZombieSignal)) {
+			var matching = 0;
+			var pipe = new List();
+			while(output.length > 0) {
+				var elm = output.pop();
+				pipe.push(elm);
+				if(elm == com.onquery.core.Connector.OPEN) matching++; else if(elm == com.onquery.core.Connector.CLOSE) matching--;
+				if(matching == 0) break;
+			}
+			var p = com.onquery.core.Interpreter.combine(pipe,context);
+			p = com.onquery.core.Interpreter.attach(p,s.properties);
+			output.push(p);
+		} else output.push(s);
 	}
+	var result = new List();
+	var _g = 0;
+	while(_g < output.length) {
+		var e = output[_g];
+		++_g;
+		result.add(e);
+	}
+	var signal = new com.onquery.signals.ConnectedSignal(context,result);
 	return signal;
 };
 com.onquery.core.Interpreter.build = function(prototype,context) {
@@ -396,7 +423,11 @@ com.onquery.core.Interpreter.build = function(prototype,context) {
 		signal = new com.onquery.signals.Signal(context);
 		signal.setType(prototype.type);
 	}
-	var $it0 = prototype.properties.iterator();
+	com.onquery.core.Interpreter.attach(signal,prototype.properties);
+	return signal;
+};
+com.onquery.core.Interpreter.attach = function(signal,properties) {
+	var $it0 = properties.iterator();
 	while( $it0.hasNext() ) {
 		var p = $it0.next();
 		if(js.Boot.__instanceof(p,com.onquery.pseudos.Pseudo)) signal = (js.Boot.__cast(p , com.onquery.pseudos.Pseudo)).attach(signal); else if(js.Boot.__instanceof(p,com.onquery.filters.Filter)) signal.filters.add(p);
@@ -432,12 +463,12 @@ com.onquery.core.Interpreter.interpt = function(input) {
 			operator = eOperator.matched(0);
 			filter = eOperator.replace(filter,"");
 		}
-		var proto1 = output.last();
+		var proto1 = com.onquery.core.Interpreter.lastPrototype(output);
 		proto1.properties.add(new com.onquery.filters.PropertyFilter(name,operator,filter));
 	} else if(ePseudo.match(input)) {
 		var pseudo = com.onquery.pseudos.Pseudo.getInstance(ePseudo.matched(1),ePseudo.matched(2));
 		input = ePseudo.replace(input,"");
-		var proto2 = output.last();
+		var proto2 = com.onquery.core.Interpreter.lastPrototype(output);
 		proto2.properties.add(pseudo);
 	} else if(eConnector.match(input)) {
 		var c = eConnector.matched(0);
@@ -447,6 +478,14 @@ com.onquery.core.Interpreter.interpt = function(input) {
 	} else throw "error parsing " + HxOverrides.substr(input,0,20);
 	return output;
 };
+com.onquery.core.Interpreter.lastPrototype = function(input) {
+	var proto = input.last();
+	if(js.Boot.__instanceof(proto,com.onquery.core.SignalPrototype)) return proto;
+	proto = new com.onquery.core.SignalPrototype();
+	proto.type = "#zombie";
+	input.add(proto);
+	return proto;
+};
 com.onquery.core.SignalPrototype = function() {
 	this.type = "";
 	this.properties = new List();
@@ -454,6 +493,124 @@ com.onquery.core.SignalPrototype = function() {
 com.onquery.core.SignalPrototype.__name__ = true;
 com.onquery.core.SignalPrototype.prototype = {
 	__class__: com.onquery.core.SignalPrototype
+};
+var js = {};
+js.Boot = function() { };
+js.Boot.__name__ = true;
+js.Boot.getClass = function(o) {
+	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
+};
+js.Boot.__string_rec = function(o,s) {
+	if(o == null) return "null";
+	if(s.length >= 5) return "<...>";
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
+	switch(t) {
+	case "object":
+		if(o instanceof Array) {
+			if(o.__enum__) {
+				if(o.length == 2) return o[0];
+				var str = o[0] + "(";
+				s += "\t";
+				var _g1 = 2;
+				var _g = o.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
+				}
+				return str + ")";
+			}
+			var l = o.length;
+			var i1;
+			var str1 = "[";
+			s += "\t";
+			var _g2 = 0;
+			while(_g2 < l) {
+				var i2 = _g2++;
+				str1 += (i2 > 0?",":"") + js.Boot.__string_rec(o[i2],s);
+			}
+			str1 += "]";
+			return str1;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e ) {
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString) {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") return s2;
+		}
+		var k = null;
+		var str2 = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str2.length != 2) str2 += ", \n";
+		str2 += s + k + " : " + js.Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str2 += "\n" + s + "}";
+		return str2;
+	case "function":
+		return "<function>";
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
+js.Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) return false;
+	if(cc == cl) return true;
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js.Boot.__interfLoop(i1,cl)) return true;
+		}
+	}
+	return js.Boot.__interfLoop(cc.__super__,cl);
+};
+js.Boot.__instanceof = function(o,cl) {
+	if(cl == null) return false;
+	switch(cl) {
+	case Int:
+		return (o|0) === o;
+	case Float:
+		return typeof(o) == "number";
+	case Bool:
+		return typeof(o) == "boolean";
+	case String:
+		return typeof(o) == "string";
+	case Array:
+		return (o instanceof Array) && o.__enum__ == null;
+	case Dynamic:
+		return true;
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) return true;
+				if(js.Boot.__interfLoop(js.Boot.getClass(o),cl)) return true;
+			}
+		} else return false;
+		if(cl == Class && o.__name__ != null) return true;
+		if(cl == Enum && o.__ename__ != null) return true;
+		return o.__enum__ == cl;
+	}
+};
+js.Boot.__cast = function(o,t) {
+	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
 com.onquery.filters = {};
 com.onquery.filters.Filter = function() { };
@@ -680,124 +837,6 @@ com.onquery.core.Connector.__name__ = true;
 com.onquery.core.Connector.prototype = {
 	__class__: com.onquery.core.Connector
 };
-var js = {};
-js.Boot = function() { };
-js.Boot.__name__ = true;
-js.Boot.getClass = function(o) {
-	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
-};
-js.Boot.__string_rec = function(o,s) {
-	if(o == null) return "null";
-	if(s.length >= 5) return "<...>";
-	var t = typeof(o);
-	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
-	switch(t) {
-	case "object":
-		if(o instanceof Array) {
-			if(o.__enum__) {
-				if(o.length == 2) return o[0];
-				var str = o[0] + "(";
-				s += "\t";
-				var _g1 = 2;
-				var _g = o.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
-				}
-				return str + ")";
-			}
-			var l = o.length;
-			var i1;
-			var str1 = "[";
-			s += "\t";
-			var _g2 = 0;
-			while(_g2 < l) {
-				var i2 = _g2++;
-				str1 += (i2 > 0?",":"") + js.Boot.__string_rec(o[i2],s);
-			}
-			str1 += "]";
-			return str1;
-		}
-		var tostr;
-		try {
-			tostr = o.toString;
-		} catch( e ) {
-			return "???";
-		}
-		if(tostr != null && tostr != Object.toString) {
-			var s2 = o.toString();
-			if(s2 != "[object Object]") return s2;
-		}
-		var k = null;
-		var str2 = "{\n";
-		s += "\t";
-		var hasp = o.hasOwnProperty != null;
-		for( var k in o ) {
-		if(hasp && !o.hasOwnProperty(k)) {
-			continue;
-		}
-		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
-			continue;
-		}
-		if(str2.length != 2) str2 += ", \n";
-		str2 += s + k + " : " + js.Boot.__string_rec(o[k],s);
-		}
-		s = s.substring(1);
-		str2 += "\n" + s + "}";
-		return str2;
-	case "function":
-		return "<function>";
-	case "string":
-		return o;
-	default:
-		return String(o);
-	}
-};
-js.Boot.__interfLoop = function(cc,cl) {
-	if(cc == null) return false;
-	if(cc == cl) return true;
-	var intf = cc.__interfaces__;
-	if(intf != null) {
-		var _g1 = 0;
-		var _g = intf.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var i1 = intf[i];
-			if(i1 == cl || js.Boot.__interfLoop(i1,cl)) return true;
-		}
-	}
-	return js.Boot.__interfLoop(cc.__super__,cl);
-};
-js.Boot.__instanceof = function(o,cl) {
-	if(cl == null) return false;
-	switch(cl) {
-	case Int:
-		return (o|0) === o;
-	case Float:
-		return typeof(o) == "number";
-	case Bool:
-		return typeof(o) == "boolean";
-	case String:
-		return typeof(o) == "string";
-	case Array:
-		return (o instanceof Array) && o.__enum__ == null;
-	case Dynamic:
-		return true;
-	default:
-		if(o != null) {
-			if(typeof(cl) == "function") {
-				if(o instanceof cl) return true;
-				if(js.Boot.__interfLoop(js.Boot.getClass(o),cl)) return true;
-			}
-		} else return false;
-		if(cl == Class && o.__name__ != null) return true;
-		if(cl == Enum && o.__ename__ != null) return true;
-		return o.__enum__ == cl;
-	}
-};
-js.Boot.__cast = function(o,t) {
-	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
-};
 com.onquery.signals = {};
 com.onquery.signals.CoreSignal = function(c) {
 	this._context = new com.onquery.SignalContext(c);
@@ -994,6 +1033,20 @@ com.onquery.signals.SequenceSignal.prototype = $extend(com.onquery.signals.Combi
 		com.onquery.signals.CombinedSignal.prototype.dispose.call(this,event);
 	}
 	,__class__: com.onquery.signals.SequenceSignal
+});
+com.onquery.signals.ZombieSignal = function(c) {
+	com.onquery.signals.Signal.call(this,c);
+};
+com.onquery.signals.ZombieSignal.__name__ = true;
+com.onquery.signals.ZombieSignal.build = function(p,c) {
+	var s = new com.onquery.signals.ZombieSignal(c);
+	s.properties = p.properties;
+	p.properties = new List();
+	return s;
+};
+com.onquery.signals.ZombieSignal.__super__ = com.onquery.signals.Signal;
+com.onquery.signals.ZombieSignal.prototype = $extend(com.onquery.signals.Signal.prototype,{
+	__class__: com.onquery.signals.ZombieSignal
 });
 com.onquery.signals.ConnectedSignal = $hx_exports.ConnectedSignal = function(c,t) {
 	com.onquery.signals.CombinedSignal.call(this,c);
@@ -1219,6 +1272,7 @@ com.onquery.core.Build.registry = (function($this) {
 	_g.set("any",null);
 	_g.set("all",com.onquery.signals.AllSignal.build);
 	_g.set("seq",com.onquery.signals.SequenceSignal.build);
+	_g.set("zombie",com.onquery.signals.ZombieSignal.build);
 	$r = _g;
 	return $r;
 }(this));

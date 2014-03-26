@@ -14,12 +14,13 @@ typedef Builder = SignalPrototype-> SignalContext->Signal;
 class Build{
 
 	static public var registry:StringMap<Builder> = [
-		'' =>		wrap,
-		'timeout'	=>null,
-		'interval'	=>IntervalSignal.build,
-		'any'		=>null,
-		'all'		=>AllSignal.build,
-		'seq'		=>SequenceSignal.build
+		''			=> wrap,
+		'timeout'	=> null,
+		'interval'	=> IntervalSignal.build,
+		'any'		=> null,
+		'all'		=> AllSignal.build,
+		'seq'		=> SequenceSignal.build,
+		'zombie'	=> ZombieSignal.build
 	];
 	
 	static public function popArg(p:SignalPrototype):String{

@@ -9,7 +9,6 @@ class Interpreter{
 	
 	static public function compile(expression:String,context:SignalContext):Signal{
 		var input:List<Dynamic> = interpt(expression);
-		var signal:Signal=null;
 		var output:List<Dynamic>=new List<Dynamic>();
 		for(elm in input){
 			if(Std.is(elm,Connector)){
@@ -19,17 +18,52 @@ class Interpreter{
 				output.add(build(elm,context));
 			}
 		}
-		if(output.length==1){
+		/*if(output.length==1){
 			signal=output.first();
 		}
 		else if(output.length>1){
 			signal=new ConnectedSignal(context,output);
 			signal.setType(expression);
-		}
-		
+		}*/
+		var signal:Signal = combine(output,context);
+		signal.setType(expression);
 		return signal;
 	}
 	
+	static private function combine(input:List<Dynamic>, context:SignalContext):Signal {
+		if(input.length<2){
+			return input.first();
+		}
+		var output:Array<Dynamic>=new Array<Dynamic>();
+		for (s in input) {
+			if (Std.is(s, ZombieSignal)) {
+				var matching:Int = 0;
+				var pipe:List<Dynamic> = new List<Dynamic>();
+				while (output.length>0) {
+					var elm:Dynamic = output.pop();
+					pipe.push(elm);
+					if (elm == Connector.OPEN) {
+						matching++;
+					}else if (elm == Connector.CLOSE) {
+						matching--;
+					}
+					if (matching == 0) break;
+				}
+				var p:Signal = combine(pipe, context);
+				p=attach(p, s.properties);
+				output.push(p);
+			}else {
+				output.push(s);
+			}
+		}
+		var result:List<Dynamic> = new List<Dynamic>();
+		for (e in output) {
+			result.add(e);
+		}
+		var signal:CombinedSignal=new ConnectedSignal(context,result);
+		//signal.setType(expression);
+		return signal;
+	}
 	
 	static public function build(prototype:SignalPrototype,context:SignalContext):Signal{
 		var signal:Signal=null;
@@ -52,7 +86,12 @@ class Interpreter{
 			signal.setType(prototype.type);
 		}
 		
-		for (p in prototype.properties){
+		attach(signal, prototype.properties);
+		return signal;
+	}
+	
+	static private function attach(signal:Signal, properties:List<Dynamic>):Signal {
+		for (p in properties){
 			if(Std.is(p,Pseudo)){
 				signal=cast(p,Pseudo).attach(signal);
 			}
@@ -62,8 +101,6 @@ class Interpreter{
 		}
 		return signal;
 	}
-	
-	
 	
 	static public function interpt(input:String):List<Dynamic>{
 		var 
@@ -105,14 +142,14 @@ class Interpreter{
 					filter=eOperator.replace(filter,'');
 				}
 				
-				var proto:SignalPrototype= output.last();
+				var proto:SignalPrototype= lastPrototype(output);//output.last();
 				proto.properties.add(new com.onquery.filters.PropertyFilter(name,operator,filter));
 			}
 			//pseudo
 			else if (ePseudo.match(input)) {
 				var pseudo:Pseudo=Pseudo.getInstance(ePseudo.matched(1),ePseudo.matched(2));
 				input=ePseudo.replace(input,'');
-				var proto:SignalPrototype= output.last();
+				var proto:SignalPrototype = lastPrototype(output);//output.last();
 				proto.properties.add(pseudo);
 			}
 			//connector
@@ -132,4 +169,14 @@ class Interpreter{
 		return output;
 	}
 	
+	static private function lastPrototype(input:List<Dynamic>):SignalPrototype{
+		var proto = input.last();
+		if (Std.is(proto, SignalPrototype)){
+			return proto;
+		}
+		proto = new SignalPrototype();
+		proto.type = "#zombie";
+		input.add(proto);
+		return proto;
+	}
 }
