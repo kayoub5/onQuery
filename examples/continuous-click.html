@@ -1,0 +1,28 @@
+<div class="form-group">
+	<label class="control-label">Detect if the user is still holding the mouse down so keep changing the value until release</label>
+	<div class="input-group">
+		<input type="text" class="form-control" id="ex-continuous-v" value="0">
+		<span class="input-group-btn">
+			<button class="btn btn-default" id="ex-continuous-p">+</button>
+			<button class="btn btn-default" id="ex-continuous-m">-</button>
+		</span>
+	</div>
+</div>
+<script>
+	$(function(){
+		var p=document.getElementById('ex-continuous-p');
+		var m=document.getElementById('ex-continuous-m');
+		var v=document.getElementById('ex-continuous-v');
+		
+		//wait for mousedown then every 100ms fire event until a mouseup
+		//plus
+		watch(p).bind("{mousedown>#interval:(100)}:rewind(mouseup)",function(e){
+			v.value++;
+		});
+		//minus
+		watch(m).bind("{mousedown>#interval:(100)}:rewind(mouseup)",function(e){
+			v.value--;
+		});
+		
+	});
+</script>

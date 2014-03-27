@@ -6,7 +6,7 @@
 	$(function(){
 		var elm=document.getElementById('ex-drag');
 		//drag=(mousedown then mousemove) but any mouseup cancel the dragging
-		watch(elm).bind('#:(mousedown>mousemove):rewind(mouseup)',function(e){
+		watch(elm).bind('{mousedown>mousemove}:rewind(mouseup)',function(e){
 			$(elm).addClass('btn-success');
 		});
 		watch(elm).bind('mouseup',function(e){

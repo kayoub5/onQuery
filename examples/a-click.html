@@ -20,7 +20,7 @@
 		})
 		// external signals use $ prefix
 		// $this for the current signal
-		// #seq:(a b c) equivalent to #:(a>b>c)
+		// #seq:(a b c) equivalent to #:(a>b>c) or {a>b>c}
 		// the sequence of signals will reset if
 		// an aUp happens or the sequence reach the last signal
 		.bind('#seq:($aDown click):rewind($aUp + $this)',function(e){
