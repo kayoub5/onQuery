@@ -1,6 +1,6 @@
 # on(Query) #
-[![Build Status](https://travis-ci.org/kayoub5/onQuery.svg?branch=master)](https://travis-ci.org/kayoub5/onQuery)
-[![Licence](http://i.creativecommons.org/l/by-nc/4.0/80x15.png)](http://creativecommons.org/licenses/by-nc/4.0/)
+[![Build Status](https://img.shields.io/travis/kayoub5/onQuery.svg)](https://travis-ci.org/kayoub5/onQuery)
+[![Licence](https://img.shields.io/badge/licence-CC_BY--NC-yellow.svg)](http://creativecommons.org/licenses/by-nc/4.0/)
 ### Description ###
 onQuery is an event querying engine for JavaScript
 
