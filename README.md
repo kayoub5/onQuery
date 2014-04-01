@@ -1,4 +1,5 @@
-# on(Query) #
+[![Logo](http://kayoub5.github.io/onQuery/images/logo.png)](http://kayoub5.github.io/onQuery/)
+
 [![Build Status](https://img.shields.io/travis/kayoub5/onQuery.png)](https://travis-ci.org/kayoub5/onQuery)
 [![Licence](https://img.shields.io/badge/licence-CC_BY--NC-yellow.png)](http://creativecommons.org/licenses/by-nc/4.0/)
 [![Repo Size](https://reposs.herokuapp.com/?path=kayoub5/onQuery)](#)
