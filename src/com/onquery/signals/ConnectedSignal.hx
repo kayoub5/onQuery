@@ -62,7 +62,7 @@ class ConnectedSignal extends CombinedSignal{
 
 				}
 				else{
-					throw 'unexpected token '+ token;
+					throw 'unexpected token';
 				}
 			}
 
@@ -135,7 +135,7 @@ class ConnectedSignal extends CombinedSignal{
 				}
 			}
 			else{
-				throw ('unknown token ' + token);     
+				throw ('unknown token');     
 			}
 		}
 		var token:Dynamic;

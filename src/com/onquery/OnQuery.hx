@@ -58,11 +58,11 @@ class OnQuery{
 		if (jQuery != null) {
 			targetBuilder = untyped jQuery;
 			jQuery.fn.dispatchEvent = jQuery.fn.trigger;
-			jQuery.fn.addEventListener = function(type:String, listener:EventListener, useCapture:Bool = false) {
+			jQuery.fn.addEventListener = function(type:String, listener:EventListener, useCapture:Bool) {
 				var o = untyped __js__("this");
 				o.on(type, listener);
 			}
-			jQuery.fn.removeEventListener = function(type:String, listener:EventListener, useCapture:Bool = false) {
+			jQuery.fn.removeEventListener = function(type:String, listener:EventListener, useCapture:Bool) {
 				var o = untyped __js__("this");
 				o.off(type, listener);
 			}

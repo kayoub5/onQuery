@@ -140,9 +140,6 @@ Reflect.fields = function(o) {
 };
 var Std = function() { };
 Std.__name__ = true;
-Std.string = function(s) {
-	return js.Boot.__string_rec(s,"");
-};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -269,12 +266,10 @@ com.onquery.OnQuery.main = function() {
 		com.onquery.OnQuery.targetBuilder = jQuery;
 		jQuery.fn.dispatchEvent = jQuery.fn.trigger;
 		jQuery.fn.addEventListener = function(type,listener,useCapture) {
-			if(useCapture == null) useCapture = false;
 			var o = this;
 			o.on(type,listener);
 		};
 		jQuery.fn.removeEventListener = function(type1,listener1,useCapture1) {
-			if(useCapture1 == null) useCapture1 = false;
 			var o1 = this;
 			o1.off(type1,listener1);
 		};
@@ -430,7 +425,7 @@ com.onquery.core.Interpreter.attach = function(signal,properties) {
 	var $it0 = properties.iterator();
 	while( $it0.hasNext() ) {
 		var p = $it0.next();
-		if(js.Boot.__instanceof(p,com.onquery.pseudos.Pseudo)) signal = (js.Boot.__cast(p , com.onquery.pseudos.Pseudo)).attach(signal); else if(js.Boot.__instanceof(p,com.onquery.filters.Filter)) signal.filters.add(p);
+		if(js.Boot.__instanceof(p,com.onquery.pseudos.Pseudo)) signal = p.attach(signal); else if(js.Boot.__instanceof(p,com.onquery.filters.Filter)) signal.filters.add(p);
 	}
 	return signal;
 };
@@ -500,73 +495,6 @@ js.Boot.__name__ = true;
 js.Boot.getClass = function(o) {
 	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
 };
-js.Boot.__string_rec = function(o,s) {
-	if(o == null) return "null";
-	if(s.length >= 5) return "<...>";
-	var t = typeof(o);
-	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
-	switch(t) {
-	case "object":
-		if(o instanceof Array) {
-			if(o.__enum__) {
-				if(o.length == 2) return o[0];
-				var str = o[0] + "(";
-				s += "\t";
-				var _g1 = 2;
-				var _g = o.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
-				}
-				return str + ")";
-			}
-			var l = o.length;
-			var i1;
-			var str1 = "[";
-			s += "\t";
-			var _g2 = 0;
-			while(_g2 < l) {
-				var i2 = _g2++;
-				str1 += (i2 > 0?",":"") + js.Boot.__string_rec(o[i2],s);
-			}
-			str1 += "]";
-			return str1;
-		}
-		var tostr;
-		try {
-			tostr = o.toString;
-		} catch( e ) {
-			return "???";
-		}
-		if(tostr != null && tostr != Object.toString) {
-			var s2 = o.toString();
-			if(s2 != "[object Object]") return s2;
-		}
-		var k = null;
-		var str2 = "{\n";
-		s += "\t";
-		var hasp = o.hasOwnProperty != null;
-		for( var k in o ) {
-		if(hasp && !o.hasOwnProperty(k)) {
-			continue;
-		}
-		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
-			continue;
-		}
-		if(str2.length != 2) str2 += ", \n";
-		str2 += s + k + " : " + js.Boot.__string_rec(o[k],s);
-		}
-		s = s.substring(1);
-		str2 += "\n" + s + "}";
-		return str2;
-	case "function":
-		return "<function>";
-	case "string":
-		return o;
-	default:
-		return String(o);
-	}
-};
 js.Boot.__interfLoop = function(cc,cl) {
 	if(cc == null) return false;
 	if(cc == cl) return true;
@@ -608,9 +536,6 @@ js.Boot.__instanceof = function(o,cl) {
 		if(cl == Enum && o.__ename__ != null) return true;
 		return o.__enum__ == cl;
 	}
-};
-js.Boot.__cast = function(o,t) {
-	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
 com.onquery.filters = {};
 com.onquery.filters.Filter = function() { };
@@ -1086,7 +1011,7 @@ com.onquery.signals.ConnectedSignal.prototype = $extend(com.onquery.signals.Comb
 			len -= connector.argc - 1;
 			var j = connector.connect(args);
 			stack.push(j);
-		} else throw "unexpected token " + Std.string(token);
+		} else throw "unexpected token";
 		if(stack.length == 1) return stack.pop();
 		throw "too many values";
 	}
@@ -1124,7 +1049,7 @@ com.onquery.signals.ConnectedSignal.prototype = $extend(com.onquery.signals.Comb
 					}
 					stack.push(op1);
 				}
-			} else throw "unknown token " + Std.string(token);
+			} else throw "unknown token";
 		}
 		var token1;
 		while(token1 = stack.pop()) {

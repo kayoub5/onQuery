@@ -93,10 +93,10 @@ class Interpreter{
 	static private function attach(signal:Signal, properties:List<Dynamic>):Signal {
 		for (p in properties){
 			if(Std.is(p,Pseudo)){
-				signal=cast(p,Pseudo).attach(signal);
+				signal=p.attach(signal);
 			}
 			else if(Std.is(p,Filter)){
-				signal.filters.add(p);
+				signal.filters.add(cast p);
 			}
 		}
 		return signal;
