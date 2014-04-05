@@ -21,6 +21,17 @@
 
 		If `sep` is null, the result is unspecified.</haxe_doc>
 		</join>
+		<pop public="1" set="method">
+			<f a=""><t path="Null"><c path="Array.T"/></t></f>
+			<haxe_doc>Removes the last element of `this` Array and returns it.
+
+		This operation modifies `this` Array in place.
+
+		If `this` has at least one element, `this.length` will decrease by 1.
+
+		If `this` is the empty Array `[]`, null is returned and the length
+		remains 0.</haxe_doc>
+		</pop>
 		<push public="1" set="method">
 			<f a="x">
 				<c path="Array.T"/>
@@ -33,6 +44,10 @@
 
 		`this.length` increases by 1.</haxe_doc>
 		</push>
+		<new public="1" set="method">
+			<f a=""><x path="Void"/></f>
+			<haxe_doc>Creates a new Array.</haxe_doc>
+		</new>
 		<haxe_doc>An Array is a storage for values. You can access it using indexes or
 	with its API.</haxe_doc>
 		<meta>
@@ -43,7 +58,7 @@
 	<abstract path="Class" params="T" file="K:\Program Files\HaxeToolkit\haxe\std/Class.hx">
 		<this><x path="Class"><c path="Class.T"/></x></this>
 		<haxe_doc>An abstract type that represents a Class.
-	
+
 	See `Type` for the Haxe Reflection API.</haxe_doc>
 		<meta>
 			<m n=":valueUsed"/>
@@ -70,11 +85,11 @@
 			</f>
 			<haxe_doc>Returns a Date from a formated string `s`, with the following accepted
 		formats:
-		
+
 		- `"YYYY-MM-DD hh:mm:ss"`
 		- `"YYYY-MM-DD"`
 		- `"hh:mm:ss"`
-		
+
 		The first two formats are expressed in local time, the third in UTC
 		Epoch.</haxe_doc>
 		</fromString>
@@ -128,10 +143,10 @@
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Creates a new date object from the given arguments.
-		
+
 		The behaviour of a Date instance is only consistent across platforms if
 		the the arguments describe a valid date.
-		
+
 		- month: 0 to 11
 		- day: 1 to 31
 		- hour: 0 to 23
@@ -140,14 +155,14 @@
 		</new>
 		<haxe_doc>The Date class provides a basic structure for date and time related
 	information. Date instances can be created by
-	
+
 	- `new Date()` for a specific date,
 	- `Date.now()` to obtain information about the current time,
 	- `Date.fromTime()` with a given timestamp or
 	- `Date.fromString()` by parsing from a String.
-	
+
 	There is some extra functions available in the `DateTools` class.
-	
+
 	In the context of haxe dates, a timestamp is defined as the number of
 	milliseconds elapsed since 1st January 1970.</haxe_doc>
 		<meta><m n=":coreApi"/></meta>
@@ -160,9 +175,9 @@
 				<x path="Bool"/>
 			</f>
 			<haxe_doc>Tells if `this` regular expression matches String `s`.
-		
+
 		This method modifies the internal state.
-		
+
 		If `s` is `null`, the result is unspecified.</haxe_doc>
 		</match>
 		<matched public="1" set="method" line="38">
@@ -171,13 +186,13 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns the matched sub-group `n` of `this` EReg.
-		
+
 		This method should only be called after `this.match` or
 		`this.matchSub`, and then operates on the String of that operation.
-		
+
 		The index `n` corresponds to the n-th set of parentheses in the pattern
 		of `this` EReg. If no such sub-group exists, an exception is thrown.
-		
+
 		If `n` equals 0, the whole matched substring is returned.</haxe_doc>
 		</matched>
 		<replace public="1" set="method" line="84">
@@ -187,16 +202,16 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Replaces the first substring of `s` which `this` EReg matches with `by`.
-		
+
 		If `this` EReg does not match any substring, the result is `s`.
-		
+
 		By default, this method replaces only the first matched substring. If
 		the global g modifier is in place, all matched substrings are replaced.
-		
+
 		If `by` contains `$1` to `$9`, the digit corresponds to number of a
 		matched sub-group and its value is used instead. If no such sub-group
 		exists, the replacement is unspecified. The string `$$` becomes `$`.
-		
+
 		If `s` or `by` are null, the result is unspecified.</haxe_doc>
 		</replace>
 		<new public="1" set="method" line="26">
@@ -206,23 +221,23 @@
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Creates a new regular expression with pattern `r` and modifiers `opt`.
-		
+
 		This is equivalent to the shorthand syntax `~/r/opt`
-		
+
 		If `r` or `opt` are null, the result is unspecified.</haxe_doc>
 		</new>
 		<haxe_doc>The EReg class represents regular expressions.
-	
+
 	While basic usage and patterns consistently work across platforms, some more
 	complex operations may yield different results. This is a necessary trade-
 	off to retain a certain level of performance.
-	
+
 	EReg instances can be created by calling the constructor, or with the
 	special syntax ~/pattern/modifier
-	
+
 	EReg instances maintain an internal state, which is affected by several of
 	its methods.
-	
+
 	A detailed explanation of the supported operations is available at
 	http://haxe.org/doc/cross/regexp</haxe_doc>
 		<meta>
@@ -233,9 +248,9 @@
 	<abstract path="Enum" params="T" file="K:\Program Files\HaxeToolkit\haxe\std/Enum.hx">
 		<this><x path="Enum"><c path="Enum.T"/></x></this>
 		<haxe_doc>An abstract type that represents an Enum type.
-	
+
 	The corresponding enum instance type is `EnumValue`.
-	
+
 	See `Type` for the Haxe Reflection API.</haxe_doc>
 		<meta>
 			<m n=":valueUsed"/>
@@ -262,7 +277,7 @@
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Adds element `item` at the end of `this` List.
-		
+
 		`this.length` increases by 1.</haxe_doc>
 		</add>
 		<push public="1" set="method" line="64">
@@ -271,31 +286,31 @@
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Adds element `item` at the beginning of `this` List.
-		
+
 		`this.length` increases by 1.</haxe_doc>
 		</push>
 		<first public="1" set="method" line="81">
 			<f a=""><t path="Null"><c path="List.T"/></t></f>
 			<haxe_doc>Returns the first element of `this` List, or null if no elements exist.
-		
+
 		This function does not modify `this` List.</haxe_doc>
 		</first>
 		<last public="1" set="method" line="90">
 			<f a=""><t path="Null"><c path="List.T"/></t></f>
 			<haxe_doc>Returns the last element of `this` List, or null if no elements exist.
-		
+
 		This function does not modify `this` List.</haxe_doc>
 		</last>
 		<pop public="1" set="method" line="100">
 			<f a=""><t path="Null"><c path="List.T"/></t></f>
 			<haxe_doc>Returns the first element of `this` List, or null if no elements exist.
-		
+
 		The element is removed from `this` List.</haxe_doc>
 		</pop>
 		<clear public="1" set="method" line="124">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Empties `this` List.
-		
+
 		This function does not traverse the elements, but simply sets the
 		internal references to null and `this.length` to 0.</haxe_doc>
 		</clear>
@@ -361,15 +376,15 @@
 		</to>
 		<haxe_doc><![CDATA[Map allows key to value mapping for arbitrary value types, and many key
 	types.
-		
+
 	This is a multi-type abstract, it is instantiated as one of its
 	specialization types depending on its type parameters.
-	
+
 	A Map can be instantiated without explicit type parameters. Type inference
 	will then determine the type parameters from the usage.
-	
+
 	Maps can also be created with `key1 => value1, key2 => value2` syntax.
-	
+
 	Map is an abstract type, it is not available at runtime.]]></haxe_doc>
 		<meta><m n=":multiType"><e>K</e></m></meta>
 		<impl><class path="_Map.Map_Impl_" params="" file="K:\Program Files\HaxeToolkit\haxe\std/Map.hx" private="1" module="Map"><meta><m n=":keep"/></meta></class></impl>
@@ -384,9 +399,7 @@
 		For example, this is the result of -1.0 / 0.0.
 
 		Operations with NEGATIVE_INFINITY as an operand may result in
-		Operations with NEGATIVE_INFINITY as an operand may result in
-		NEGATIVE_INFINITY, POSITIVE_INFINITY or NaN. For detailed information,
-		see ...
+		NEGATIVE_INFINITY, POSITIVE_INFINITY or NaN. 
 
 		If this constant is converted to an Int, e.g. through Std.int(), the
 		result is unspecified.</haxe_doc>
@@ -398,8 +411,7 @@
 		For example, this is the result of 1.0 / 0.0.
 
 		Operations with POSITIVE_INFINITY as an operand may result in
-		NEGATIVE_INFINITY, POSITIVE_INFINITY or NaN. For detailed information,
-		see ...
+		NEGATIVE_INFINITY, POSITIVE_INFINITY or NaN. 
 
 		If this constant is converted to an Int, e.g. through Std.int(), the
 		result is unspecified.</haxe_doc>
@@ -419,9 +431,9 @@
 
 		In order to test if a value is NaN, you should use Math.isNaN() function.
 
-		(Php) In PHP versions prior to 5.3.1 VC 9 there may be unexpected
-		results when performing arithmetic operations with NaN on Windows, see:
-			https://bugs.php.net/bug.php?id=42143</haxe_doc>
+		@php In PHP versions prior to 5.3.1 VC 9 there may be unexpected
+		results when performing arithmetic operations with NaN on Windows, 
+		see [https://bugs.php.net/bug.php?id=42143]</haxe_doc>
 		</NaN>
 		<min public="1" set="method" static="1">
 			<f a="a:b">
@@ -432,9 +444,7 @@
 			<haxe_doc>Returns the smaller of values `a` and `b`.
 
 		If `a` or `b` are NaN, the result is NaN.
-
 		If `a` or `b` are NEGATIVE_INFINITY, the result is NEGATIVE_INFINITY.
-
 		If `a` and `b` are POSITIVE_INFINITY, the result is POSITIVE_INFINITY.</haxe_doc>
 		</min>
 		<max public="1" set="method" static="1">
@@ -446,9 +456,7 @@
 			<haxe_doc>Returns the greater of values `a` and `b`.
 
 		If `a` or `b` are NaN, the result is NaN.
-
 		If `a` or `b` are POSITIVE_INFINITY, the result is POSITIVE_INFINITY.
-
 		If `a` and `b` are NEGATIVE_INFINITY, the result is NEGATIVE_INFINITY.</haxe_doc>
 		</max>
 		<isFinite public="1" set="method" static="1">
@@ -458,10 +466,8 @@
 			</f>
 			<haxe_doc>Tells if `f` is a finite number.
 
-		If `f` is POSITIVE_INFINITY, NEGATIVE_INFINITY or NaN, the result is
-		false.
-
-		Otherwise the result is true.</haxe_doc>
+		If `f` is POSITIVE_INFINITY, NEGATIVE_INFINITY or NaN, the result 
+		is false, otherwise the result is true.</haxe_doc>
 		</isFinite>
 		<isNaN public="1" set="method" static="1">
 			<f a="f">
@@ -470,10 +476,9 @@
 			</f>
 			<haxe_doc>Tells if `f` is not a valid number.
 
-		If `f` is NaN, the result is true.
-
-		Otherwise the result is false. In particular, both POSITIVE_INFINITY and
-		NEGATIVE_INFINITY are not considered NaN.</haxe_doc>
+		If `f` is NaN, the result is true, otherwise the result is false. 
+		In particular, both POSITIVE_INFINITY and NEGATIVE_INFINITY are
+		not considered NaN.</haxe_doc>
 		</isNaN>
 		<haxe_doc>This class defines mathematical functions and constants.</haxe_doc>
 		<meta><m n=":keep"/></meta>
@@ -486,18 +491,30 @@
 				<d/>
 			</f>
 			<haxe_doc>Returns the value of the field named `field` on object `o`.
-		
+
 		If `o` is not an object or has no field named `field`, the result is
 		null.
-		
+
 		If the field is defined as a property, its accessors are ignored. Refer
 		to `Reflect.getProperty` for a function supporting property accessors.
-		
+
 		If `field` is null, the result is unspecified.
-		
+
 		(As3) If used on a property field, the getter will be invoked. It is
 		not possible to obtain the value directly.</haxe_doc>
 		</field>
+		<fields public="1" set="method" line="50" static="1">
+			<f a="o">
+				<d/>
+				<c path="Array"><c path="String"/></c>
+			</f>
+			<haxe_doc>Returns the fields of structure `o`.
+
+		This method is only guaranteed to work on anonymous structures. Refer to
+		`Type.getInstanceFields` for a function supporting class instances.
+
+		If `o` is null, the result is unspecified.</haxe_doc>
+		</fields>
 		<haxe_doc>The Reflect API is a way to manipulate values dynamicly through an
 	abstract interface in an untyped manner. Use with care.</haxe_doc>
 		<meta>
@@ -512,7 +529,7 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns the String corresponding to the character code `code`.
-		
+
 		If `code` is negative or has another invalid value, the result is
 		unspecified.</haxe_doc>
 		</fromCharCode>
@@ -523,13 +540,13 @@
 		<toUpperCase public="1" set="method">
 			<f a=""><c path="String"/></f>
 			<haxe_doc>Returns a String where all characters of `this` String are upper case.
-		
+
 		Affects the characters `a-z`. Other characters remain unchanged.</haxe_doc>
 		</toUpperCase>
 		<toLowerCase public="1" set="method">
 			<f a=""><c path="String"/></f>
 			<haxe_doc>Returns a String where all characters of `this` String are lower case.
-		
+
 		Affects the characters `A-Z`. Other characters remain unchanged.</haxe_doc>
 		</toLowerCase>
 		<charAt public="1" set="method">
@@ -538,7 +555,7 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns the character at position `index` of `this` String.
-		
+
 		If `index` is negative or exceeds `this.length`, the empty String ""
 		is returned.</haxe_doc>
 		</charAt>
@@ -550,12 +567,12 @@
 			</f>
 			<haxe_doc>Returns the position of the leftmost occurence of `str` within `this`
 		String.
-		
+
 		If `startIndex` is given, the search is performed within the substring
 		of `this` String starting from `startIndex`. Otherwise the search is
 		performed within `this` String. In either case, the returned position
 		is relative to the beginning of `this` String.
-		
+
 		If `str` cannot be found, -1 is returned.</haxe_doc>
 		</indexOf>
 		<lastIndexOf public="1" set="method">
@@ -566,12 +583,12 @@
 			</f>
 			<haxe_doc>Returns the position of the rightmost occurence of `str` within `this`
 		String.
-		
+
 		If `startIndex` is given, the search is performed within the substring
 		of `this` String from 0 to `startIndex`. Otherwise the search is
 		performed within `this` String. In either case, the returned position
 		is relative to the beginning of `this` String.
-		
+
 		If `str` cannot be found, -1 is returned.</haxe_doc>
 		</lastIndexOf>
 		<split public="1" set="method">
@@ -580,19 +597,19 @@
 				<c path="Array"><c path="String"/></c>
 			</f>
 			<haxe_doc>Splits `this` String at each occurence of `delimiter`.
-		
+
 		If `this` String is the empty String "", the result is not consistent
 		across targets and may either be `[]` (on Js, Cpp) or `[""]`.
-		
+
 		If `delimiter` is the empty String "", `this` String is split into an
 		Array of `this.length` elements, where the elements correspond to the
 		characters of `this` String.
-		
+
 		If `delimiter` is not found within `this` String, the result is an Array
 		with one element, which equals `this` String.
-		
+
 		If `delimiter` is null, the result is unspecified.
-		
+
 		Otherwise, `this` String is split into parts at each occurence of
 		`delimiter`. If `this` String starts (or ends) with [delimiter}, the
 		result Array contains a leading (or trailing) empty String "" element.
@@ -609,14 +626,14 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns the part of `this` String from `startIndex` to `endIndex`.
-		
+
 		If `startIndex` or `endIndex` are negative, 0 is used instead.
-		
+
 		If `startIndex` exceeds `endIndex`, they are swapped.
-		
+
 		If the (possibly swapped) `endIndex` is omitted or exceeds
 		`this.length`, `this.length` is used instead.
-		
+
 		If the (possibly swapped) `startIndex` exceeds `this.length`, the empty
 		String "" is returned.</haxe_doc>
 		</substring>
@@ -626,9 +643,9 @@
 				<t path="Null"><x path="Int"/></t>
 			</f>
 			<haxe_doc>Returns the character code at position `index` of `this` String.
-		
+
 		If `index` is negative or exceeds `this.length`, null is returned.
-		
+
 		To obtain the character code of a single character, "x".code can be used
 		instead to inline the character code at compile time. Note that this
 		only works on String literals of length 1.</haxe_doc>
@@ -640,17 +657,17 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns `len` characters of `this` String, starting at position `pos`.
-		
+
 		If `len` is omitted, all characters from position `pos` to the end of
 		`this` String are included.
-		
+
 		If `pos` is negative, its value is calculated from the end of `this`
 		String by `this.length + pos`. If this yields a negative value, 0 is
 		used instead.
-		
+
 		If the calculated position + `len` exceeds `this.length`, the characters
 		from that position to the end of `this` String are returned.
-		
+
 		If `len` is negative, the result is unspecified.</haxe_doc>
 		</substr>
 		<new public="1" set="method">
@@ -661,39 +678,17 @@
 			<haxe_doc>Creates a copy from a given String.</haxe_doc>
 		</new>
 		<haxe_doc>The basic String class.
-	
+
 	A haxe String is immutable, it is not possible to modify individual
 	characters. No method of this class changes the state of `this` String.
-	
+
 	Strings can be constructed using the string literal syntax "string value".
-	
+
 	String can be concatenated by using the + operator. If an operand is not a
 	String, it is passed through Std.string() first.</haxe_doc>
 		<meta><m n=":coreApi"/></meta>
 	</class>
 	<class path="Std" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/_std/Std.hx">
-		<string public="1" set="method" line="35" static="1">
-			<f a="s">
-				<d/>
-				<c path="String"/>
-			</f>
-			<haxe_doc>Converts any value to a String.
-
-		If `s` is of `String`, `Int`, `Float` or `Bool`, its value is returned.
-
-		If `s` is an instance of a class and that class or one of its parent classes has
-		a `toString` method, that method is called. If no such method is present, the result
-		is unspecified.
-
-		If `s` is an enum constructor without argument, the constructor's name is returned. If
-		arguments exists, the constructor's name followed by the String representations of
-		the arguments is returned.
-
-		If `s` is a structure, the field names along with their values are returned. The field order
-		and the operator separating field names and values are unspecified.
-
-		If s is null, "null" is returned.</haxe_doc>
-		</string>
 		<parseInt public="1" set="method" line="43" static="1">
 			<f a="x">
 				<c path="String"/>
@@ -718,6 +713,18 @@
 
 		If the input cannot be recognized, the result is null.</haxe_doc>
 		</parseInt>
+		<parseFloat public="1" set="method" line="53" static="1">
+			<f a="x">
+				<c path="String"/>
+				<x path="Float"/>
+			</f>
+			<haxe_doc>Converts a `String` to a `Float`.
+
+		The parsing rules for `parseInt` apply here as well, with the exception of invalid input
+		resulting in a NaN value instead of null.
+
+		Additionally, decimal notation may contain a single `.` to denote the start of the fractions.</haxe_doc>
+		</parseFloat>
 		<haxe_doc>The Std class provides standard methods for manipulating basic types.</haxe_doc>
 		<meta>
 			<m n=":keep"/>
@@ -733,7 +740,7 @@
 	<abstract path="Float" params="" file="K:\Program Files\HaxeToolkit\haxe\std/StdTypes.hx" module="StdTypes">
 		<this><x path="Float"/></this>
 		<haxe_doc><![CDATA[The standard Float type, this is a double-precision IEEE 64bit float.
-	
+
 	On static targets, null cannot be assigned to Float. If this is necessary,
 	`Null<Float>` can be used instead.]]></haxe_doc>
 		<meta>
@@ -747,7 +754,7 @@
 		<this><x path="Int"/></this>
 		<to><icast><x path="Float"/></icast></to>
 		<haxe_doc><![CDATA[The standard Int type. Its precision depends on the platform.
-	
+
 	On static targets, null cannot be assigned to Int. If this is necessary,
 	`Null<Int>` can be used instead.]]></haxe_doc>
 		<meta>
@@ -767,7 +774,7 @@
 	<abstract path="Bool" params="" file="K:\Program Files\HaxeToolkit\haxe\std/StdTypes.hx" module="StdTypes">
 		<this><x path="Bool"/></this>
 		<haxe_doc><![CDATA[The standard Boolean type, which can either be true or false.
-	
+
 	On static targets, null cannot be assigned to Bool. If this is necessary,
 	`Null<Bool>` can be used instead.]]></haxe_doc>
 		<meta>
@@ -780,7 +787,7 @@
 	<abstract path="Dynamic" params="T" file="K:\Program Files\HaxeToolkit\haxe\std/StdTypes.hx" module="StdTypes">
 		<this><x path="Dynamic"><c path="Dynamic.T"/></x></this>
 		<haxe_doc>Dynamic is a special type which is compatible with all other types.
-	
+
 	Use of Dynamic should be minimized as it prevents several compiler
 	checks and optimizations.</haxe_doc>
 		<meta>
@@ -794,14 +801,14 @@
 			<next set="method">
 				<f a=""><c path="Iterator.T"/></f>
 				<haxe_doc>Returns the current item of the Iterator and advances to the next one.
-		
+
 		This method is not required to check hasNext() first. A call to this
 		method while hasNext() is false yields unspecified behavior.</haxe_doc>
 			</next>
 			<hasNext set="method">
 				<f a=""><x path="Bool"/></f>
 				<haxe_doc>Returns false if the iteration is complete, true otherwise.
-		
+
 		Usually iteration is considered to be complete if all elements of the
 		underlying data structure were handled through calls to next(). However,
 		in custom iterators any logic may be used to determine the completion
@@ -862,7 +869,7 @@
 			<haxe_doc>Creates a new StringMap.</haxe_doc>
 		</new>
 		<haxe_doc>StringMap allows mapping of String keys to arbitrary values.
-	
+
 	See `Map` for documentation details.</haxe_doc>
 		<meta>
 			<m n=":keep"/>
@@ -894,41 +901,64 @@
 </f></new>
 	</class>
 	<class path="com.onquery.OnQuery" params="" file="src/com/onquery/OnQuery.hx">
-		<globalContext public="1" line="12" static="1"><c path="com.onquery.SignalContext"/></globalContext>
-		<watch public="1" set="method" line="16" static="1"><f a="target">
+		<globalContext public="1" line="10" static="1"><c path="com.onquery.SignalContext"/></globalContext>
+		<targetBuilder public="1" static="1"><f a="">
+	<d/>
 	<t path="com.onquery.EventTarget"/>
-	<c path="com.onquery.Watcher"/>
-</f></watch>
-		<when public="1" set="method" line="20" static="1"><f a="query">
-	<c path="String"/>
-	<c path="com.onquery.signals.Signal"/>
-</f></when>
-		<getContext public="1" set="method" line="24" static="1"><f a="target">
+</f></targetBuilder>
+		<watch public="1" set="method" line="19" static="1">
+			<f a="target">
+				<t path="com.onquery.EventTarget"/>
+				<c path="com.onquery.Watcher"/>
+			</f>
+			<meta><m n=":expose"><e>"watch"</e></m></meta>
+			<haxe_doc>* available threw the window object.
+	 * return an instance of a Watcher that moniter the target, watch() will return the same instance every time.</haxe_doc>
+		</watch>
+		<when public="1" set="method" line="31" static="1">
+			<f a="query">
+				<c path="String"/>
+				<c path="com.onquery.signals.Signal"/>
+			</f>
+			<meta><m n=":expose"><e>"when"</e></m></meta>
+			<haxe_doc>* available threw the window object.
+	 * use when() instead of watch() when the query does not require a target</haxe_doc>
+		</when>
+		<getContext public="1" set="method" line="35" static="1"><f a="target">
 	<t path="com.onquery.EventTarget"/>
 	<c path="com.onquery.SignalContext"/>
 </f></getContext>
-		<main set="method" line="40" static="1">
+		<main set="method" line="53" static="1">
 			<f a=""><x path="Void"/></f>
 			<meta><m n=":keep"/></meta>
+			<haxe_doc>* @private</haxe_doc>
 		</main>
-		<meta>
-			<m n=":expose"><e>"OnQuery"</e></m>
-			<m n=":expose"/>
-		</meta>
+		<meta><m n=":expose"><e>"OnQuery"</e></m></meta>
 	</class>
 	<typedef path="com.onquery.Operator" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><f a=":">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></typedef>
-	<typedef path="com.onquery.EventListener" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><f a="">
-	<d/>
-	<x path="Void"/>
-</f></typedef>
-	<typedef path="com.onquery.Event" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><c path="js.html.Event"/></typedef>
-	<typedef path="com.onquery.EventTarget" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><c path="js.html.EventTarget"/></typedef>
-	<typedef path="com.onquery.ContextEvent" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><c path="js.html.Event"/></typedef>
-	<typedef path="com.onquery.UInt" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery"><x path="Int"/></typedef>
+	<typedef path="com.onquery.EventListener" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery">
+		<f a="">
+			<d/>
+			<x path="Void"/>
+		</f>
+		<haxe_doc>* an event listener, typically a function with one argument.</haxe_doc>
+	</typedef>
+	<typedef path="com.onquery.Event" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery">
+		<c path="js.html.Event"/>
+		<haxe_doc>* an event</haxe_doc>
+	</typedef>
+	<typedef path="com.onquery.EventTarget" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery">
+		<c path="js.html.EventTarget"/>
+		<haxe_doc>* an event target, must impliment at least addEventListener, removeEventListener, dispatchEvent.</haxe_doc>
+	</typedef>
+	<typedef path="com.onquery.ContextEvent" params="" file="src/com/onquery/OnQuery.hx" module="com.onquery.OnQuery">
+		<c path="js.html.Event"/>
+		<haxe_doc>* a context event, a special type of event used for storing the Watcher inside the EventTarget</haxe_doc>
+	</typedef>
 	<class path="com.onquery.Watcher" params="" file="src/com/onquery/Watcher.hx">
 		<context><c path="com.onquery.SignalContext"/></context>
 		<bind public="1" set="method" line="14"><f a="query:handler:?options" v="::null">
@@ -947,7 +977,7 @@
 	<x path="Void"/>
 </f></unbind>
 		<use public="1" set="method" line="31"><f a="data">
-	<c path="haxe.ds.StringMap"><d/></c>
+	<d/>
 	<c path="com.onquery.Watcher"/>
 </f></use>
 		<new public="1" set="method" line="9"><f a="c">
@@ -1041,20 +1071,54 @@
 	<c path="com.onquery.SignalContext"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></compile>
-		<build public="1" set="method" line="34" static="1"><f a="prototype:context">
+		<combine set="method" line="33" static="1"><f a="input:context">
+	<c path="List"><d/></c>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></combine>
+		<build public="1" set="method" line="68" static="1"><f a="prototype:context">
 	<c path="com.onquery.core.SignalPrototype"/>
 	<c path="com.onquery.SignalContext"/>
 	<c path="com.onquery.signals.Signal"/>
 </f></build>
-		<interpt public="1" set="method" line="68" static="1"><f a="input">
+		<attach set="method" line="93" static="1"><f a="signal:properties">
+	<c path="com.onquery.signals.Signal"/>
+	<c path="List"><d/></c>
+	<c path="com.onquery.signals.Signal"/>
+</f></attach>
+		<interpt public="1" set="method" line="105" static="1"><f a="input">
 	<c path="String"/>
 	<c path="List"><d/></c>
 </f></interpt>
+		<lastPrototype set="method" line="172" static="1"><f a="input">
+	<c path="List"><d/></c>
+	<c path="com.onquery.core.SignalPrototype"/>
+</f></lastPrototype>
 	</class>
 	<class path="com.onquery.core.SignalPrototype" params="" file="src/com/onquery/core/SignalPrototype.hx">
 		<type public="1"><c path="String"/></type>
 		<properties public="1"><c path="List"><d/></c></properties>
 		<new public="1" set="method" line="11"><f a=""><x path="Void"/></f></new>
+	</class>
+	<class path="js.Boot" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/Boot.hx">
+		<getClass get="inline" set="null" line="70" static="1"><f a="o">
+	<d/>
+	<d/>
+</f></getClass>
+		<__interfLoop set="method" line="150" static="1"><f a="cc:cl">
+	<d/>
+	<d/>
+	<x path="Bool"/>
+</f></__interfLoop>
+		<__instanceof set="method" line="165" static="1">
+			<f a="o:cl">
+				<d/>
+				<d/>
+				<x path="Bool"/>
+			</f>
+			<meta><m n=":ifFeature"><e>"typed_catch"</e></m></meta>
+		</__instanceof>
+		<meta><m n=":keep"/></meta>
 	</class>
 	<class path="com.onquery.filters.Filter" params="" file="src/com/onquery/filters/Filter.hx" interface="1"><match public="1" set="method"><f a="object">
 	<d/>
@@ -1062,46 +1126,46 @@
 </f></match></class>
 	<class path="com.onquery.filters.PropertyFilter" params="" file="src/com/onquery/filters/PropertyFilter.hx">
 		<implements path="com.onquery.filters.Filter"/>
-		<operators line="23" static="1"><c path="haxe.ds.StringMap"><t path="com.onquery.Operator"/></c></operators>
-		<contains set="method" line="33" static="1"><f a="left:right">
+		<operators line="34" static="1"><c path="haxe.ds.StringMap"><t path="com.onquery.Operator"/></c></operators>
+		<contains set="method" line="44" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></contains>
-		<exists set="method" line="37" static="1"><f a="left:right">
+		<exists set="method" line="48" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></exists>
-		<differs set="method" line="40" static="1"><f a="left:right">
+		<differs set="method" line="51" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></differs>
-		<equals set="method" line="44" static="1"><f a="left:right">
+		<equals set="method" line="55" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></equals>
-		<boolEquals set="method" line="47" static="1"><f a="left:right">
+		<boolEquals set="method" line="58" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></boolEquals>
-		<greaterThan set="method" line="51" static="1"><f a="left:right">
+		<greaterThan set="method" line="62" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></greaterThan>
-		<lessThan set="method" line="55" static="1"><f a="left:right">
+		<lessThan set="method" line="66" static="1"><f a="left:right">
 	<d/>
 	<d/>
 	<x path="Bool"/>
 </f></lessThan>
 		<name public="1"><c path="String"/></name>
 		<operator public="1"><c path="String"/></operator>
-		<value public="1"><c path="String"/></value>
-		<match public="1" set="method" line="16"><f a="object">
+		<value public="1"><d/></value>
+		<match public="1" set="method" line="27"><f a="object">
 	<d/>
 	<x path="Bool"/>
 </f></match>
@@ -1247,50 +1311,6 @@
 	<x path="Void"/>
 </f></new>
 	</class>
-	<class path="js.Boot" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/Boot.hx">
-		<getClass get="inline" set="null" line="70" static="1"><f a="o">
-	<d/>
-	<d/>
-</f></getClass>
-		<__string_rec set="method" line="78" static="1">
-			<f a="o:s">
-				<a>
-					<toString set="null"><f a=""><c path="String"/></f></toString>
-					<length set="null"><x path="Int"/></length>
-					<hasOwnProperty set="null"><f a="">
-	<c path="String"/>
-	<x path="Bool"/>
-</f></hasOwnProperty>
-					<__enum__ set="null"><x path="Bool"/></__enum__>
-				</a>
-				<c path="String"/>
-				<c path="String"/>
-			</f>
-			<meta><m n=":ifFeature"><e>"has_enum"</e></m></meta>
-		</__string_rec>
-		<__interfLoop set="method" line="150" static="1"><f a="cc:cl">
-	<d/>
-	<d/>
-	<x path="Bool"/>
-</f></__interfLoop>
-		<__instanceof set="method" line="165" static="1">
-			<f a="o:cl">
-				<d/>
-				<d/>
-				<x path="Bool"/>
-			</f>
-			<meta><m n=":ifFeature"><e>"typed_catch"</e></m></meta>
-		</__instanceof>
-		<__cast set="method" line="201" static="1">
-			<f a="o:t">
-				<d/>
-				<d/>
-				<unknown/>
-			</f>
-			<meta><m n=":ifFeature"><e>"typed_cast"</e></m></meta>
-		</__cast>
-		<meta><m n=":keep"/></meta>
-	</class>
 	<class path="com.onquery.signals.CoreSignal" params="" file="src/com/onquery/signals/CoreSignal.hx">
 		<implements path="com.onquery.collections.ListenersCollection"/>
 		<listeners public="1"><c path="com.onquery.collections.ListenersCollection"/></listeners>
@@ -1372,6 +1392,30 @@
 		<haxe_doc>* ...
  * @author Ayoub Kaanich</haxe_doc>
 	</class>
+	<class path="com.onquery.signals.IntervalSignal" params="" file="src/com/onquery/signals/IntervalSignal.hx">
+		<extends path="com.onquery.signals.CombinedSignal"/>
+		<build public="1" set="method" line="14" static="1"><f a="p:c">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></build>
+		<delay><x path="Int"/></delay>
+		<timer public="1"><c path="haxe.Timer"/></timer>
+		<tick set="method" line="24"><f a=""><x path="Void"/></f></tick>
+		<rewind public="1" set="method" line="28" override="1"><f a="?e" v="null">
+	<d/>
+	<x path="Void"/>
+</f></rewind>
+		<dispose public="1" set="method" line="36" override="1"><f a="?event" v="null">
+	<t path="com.onquery.Event"/>
+	<x path="Void"/>
+</f></dispose>
+		<new set="method" line="18"><f a="c:delay">
+	<c path="com.onquery.SignalContext"/>
+	<x path="Int"/>
+	<x path="Void"/>
+</f></new>
+	</class>
 	<class path="com.onquery.signals.AllSignal" params="" file="src/com/onquery/signals/AllSignal.hx">
 		<extends path="com.onquery.signals.CombinedSignal"/>
 		<build public="1" set="method" line="12" static="1"><f a="p:c">
@@ -1422,6 +1466,19 @@
 	<x path="Void"/>
 </f></new>
 	</class>
+	<class path="com.onquery.signals.ZombieSignal" params="" file="src/com/onquery/signals/ZombieSignal.hx">
+		<extends path="com.onquery.signals.Signal"/>
+		<build public="1" set="method" line="7" static="1"><f a="p:c">
+	<c path="com.onquery.core.SignalPrototype"/>
+	<c path="com.onquery.SignalContext"/>
+	<c path="com.onquery.signals.Signal"/>
+</f></build>
+		<properties public="1"><c path="List"><d/></c></properties>
+		<new public="1" set="method" line="15"><f a="c">
+	<c path="com.onquery.SignalContext"/>
+	<x path="Void"/>
+</f></new>
+	</class>
 	<class path="com.onquery.signals.ConnectedSignal" params="" file="src/com/onquery/signals/ConnectedSignal.hx">
 		<extends path="com.onquery.signals.CombinedSignal"/>
 		<queue public="1"><c path="List"><d/></c></queue>
@@ -1446,7 +1503,7 @@
 		<meta><m n=":expose"><e>"ConnectedSignal"</e></m></meta>
 	</class>
 	<class path="com.onquery.core.Build" params="" file="src/com/onquery/core/Build.hx">
-		<registry public="1" line="17" static="1"><c path="haxe.ds.StringMap"><t path="com.onquery.core.Builder"/></c></registry>
+		<registry public="1" line="16" static="1"><c path="haxe.ds.StringMap"><t path="com.onquery.core.Builder"/></c></registry>
 		<popArg public="1" set="method" line="26" static="1"><f a="p">
 	<c path="com.onquery.core.SignalPrototype"/>
 	<c path="String"/>
@@ -1464,17 +1521,17 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns the name of enum `e`, including its path.
-		
+
 		If `e` is inside a package, the package structure is returned dot-
 		separated, with another dot separating the enum name:
 			pack1.pack2.(...).packN.EnumName
 		If `e` is a sub-type of a haxe module, that module is not part of the
 		package structure.
-			
+
 		If `e` has no package, the enum name is returned.
-		
+
 		If `e` is null, the result is unspecified.
-		
+
 		The enum name does not include any type parameters.</haxe_doc>
 		</getName>
 		<createByName public="1" params="T" get="inline" set="null" line="54" static="1">
@@ -1486,7 +1543,7 @@
 			</f>
 			<haxe_doc>Creates an instance of enum `e` by calling its constructor `constr` with
 		arguments `params`.
-		
+
 		If `e` or `constr` is null, or if enum `e` has no constructor named
 		`constr`, or if the number of elements in `params` does not match the
 		expected number of constructor arguments, or if any argument has an
@@ -1501,10 +1558,10 @@
 			</f>
 			<haxe_doc>Creates an instance of enum `e` by calling its constructor number
 		`index` with arguments `params`.
-		
+
 		The constructor indices are preserved from haxe syntax, so the first
 		declared is index 0, the next index 1 etc.
-		
+
 		If `e` or `constr` is null, or if enum `e` has no constructor named
 		`constr`, or if the number of elements in `params` does not match the
 		expected number of constructor arguments, or if any argument has an
@@ -1517,14 +1574,14 @@
 			</f>
 			<haxe_doc>Returns a list of all constructors of enum `e` that require no
 		arguments.
-		
+
 		This may return the empty Array [] if all constructors of `e` require
 		arguments.
-		
+
 		Otherwise an instance of `e` constructed through each of its non-
 		argument constructors is returned, in the order of the constructor
 		declaration.
-		
+
 		If `e` is null, the result is unspecified.</haxe_doc>
 		</createAll>
 		<getConstructors public="1" params="T" get="inline" set="null" line="99" static="1">
@@ -1533,10 +1590,10 @@
 				<c path="Array"><c path="String"/></c>
 			</f>
 			<haxe_doc>Returns a list of the names of all constructors of enum `e`.
-		
+
 		The order of the constructor names in the returned Array is preserved
 		from the original syntax.
-		
+
 		If `c` is null, the result is unspecified.</haxe_doc>
 		</getConstructors>
 	</class>
@@ -1548,10 +1605,10 @@
 				<x path="Bool"/>
 			</f>
 			<haxe_doc>Recursively compares two enum instances `a` and `b` by value.
-		
+
 		Unlike `a == b`, this function performs a deep equality check on the
 		arguments of the constructors, if exists.
-		
+
 		If `a` or `b` are null, the result is unspecified.</haxe_doc>
 		</equals>
 		<getName public="1" get="inline" set="null" line="125" static="1">
@@ -1560,9 +1617,9 @@
 				<c path="String"/>
 			</f>
 			<haxe_doc>Returns the constructor name of enum instance `e`.
-		
+
 		The result String does not contain any constructor arguments.
-		
+
 		If `e` is null, the result is unspecified.</haxe_doc>
 		</getName>
 		<getParameters public="1" get="inline" set="null" line="139" static="1">
@@ -1571,12 +1628,12 @@
 				<c path="Array"><d/></c>
 			</f>
 			<haxe_doc>Returns a list of the constructor arguments of enum instance `e`.
-		
+
 		If `e` has no arguments, the result is [].
-		
+
 		Otherwise the result are the values that were used as arguments to `e`,
 		in the order of their declaration.
-		
+
 		If `e` is null, the result is unspecified.</haxe_doc>
 		</getParameters>
 		<getIndex public="1" get="inline" set="null" line="151" static="1">
@@ -1585,10 +1642,10 @@
 				<x path="Int"/>
 			</f>
 			<haxe_doc>Returns the index of enum instance `e`.
-		
+
 		This corresponds to the original syntactic position of `e`. The index of
 		the first declared constructor is 0, the next one is 1 etc.
-		
+
 		If `e` is null, the result is unspecified.</haxe_doc>
 		</getIndex>
 	</class>
@@ -1605,11 +1662,11 @@
 		</a>
 		<haxe_doc>PosInfos is a magic type which can be used to generate position information
 	into the output for debugging use.
-	
+
 	If a function has a final optional argument of this type, i.e.
 	(..., ?pos:haxe.PosInfos), each call to that function which does not assign
 	a value to that argument has its position added as call argument.
-	
+
 	This can be used to track positions of calls in e.g. a unit testing
 	framework.</haxe_doc>
 	</typedef>
@@ -1621,32 +1678,32 @@
 				<c path="haxe.Timer"/>
 			</f>
 			<haxe_doc>Invokes `f` after `time_ms` milliseconds.
-		
+
 		This is a convenience function for creating a new Timer instance with
 		`time_ms` as argument, binding its run() method to `f` and then stopping
 		`this` Timer upon the first invocation.
-		
+
 		If `f` is null, the result is unspecified.</haxe_doc>
 		</delay>
 		<id><t path="Null"><x path="Int"/></t></id>
 		<stop public="1" set="method" line="83">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>Stops `this` Timer.
-		
+
 		After calling this method, no additional invocations of `this.run`
 		will occur.
-		
+
 		It is not possible to restart `this` Timer once stopped.</haxe_doc>
 		</stop>
 		<run public="1" set="dynamic" line="113">
 			<f a=""><x path="Void"/></f>
 			<haxe_doc>This method is invoked repeatedly on `this` Timer.
-		
+
 		It can be overridden in a subclass, or rebound directly to a custom
 		function:
 			var timer = new haxe.Timer(1000); // 1000ms delay
 			timer.run = function() { ... }
-			
+
 		Once bound, it can still be rebound to different functions until `this`
 		Timer is stopped through a call to `this.stop`.</haxe_doc>
 		</run>
@@ -1656,25 +1713,25 @@
 				<x path="Void"/>
 			</f>
 			<haxe_doc>Creates a new timer that will run every `time_ms` milliseconds.
-		
+
 		After creating the Timer instance, it calls `this].run` repeatedly,
 		with delays of `time_ms` milliseconds, until `this.stop` is called.
-		
+
 		The first invocation occurs after `time_ms` milliseconds, not
 		immediately.
-		
+
 		The accuracy of this may be platform-dependent.</haxe_doc>
 		</new>
 		<haxe_doc>The Timer class allows you to create asynchronous timers on platforms that
 	support events.
-	
+
 	The intended usage is to create an instance of the Timer class with a given
 	interval, set its run() method to a custom function to be invoked and
 	eventually call stop() to stop the Timer.
 
-	Note that a running Timer may or may not prevent the program to exit 
+	Note that a running Timer may or may not prevent the program to exit
 	automatically when main() returns.
-	
+
 	It is also possible to extend this class and override its run() method in
 	the child class.</haxe_doc>
 		<meta><m n=":keep"/></meta>
@@ -5194,19 +5251,6 @@ Documentation for this class was provided by <a href="https://developer.mozilla.
 	<class path="js.html.DOMError" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/DOMError.hx" extern="1">
 		<name public="1" set="null"><c path="String"/></name>
 		<meta><m n=":native"><e>"DOMError"</e></m></meta>
-	</class>
-	<class path="js.html.DOMFormData" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/DOMFormData.hx" extern="1">
-		<append public="1" set="method"><f a="name:value:filename">
-	<c path="String"/>
-	<c path="String"/>
-	<c path="String"/>
-	<x path="Void"/>
-</f></append>
-		<new public="1" set="method"><f a="?arg0">
-	<d/>
-	<x path="Void"/>
-</f></new>
-		<meta><m n=":native"><e>"FormData"</e></m></meta>
 	</class>
 	<class path="js.html.DOMImplementation" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/DOMImplementation.hx" extern="1">
 		<createCSSStyleSheet public="1" set="method"><f a="title:media">
@@ -11080,226 +11124,6 @@ Documentation for this class was provided by <a href="https://developer.mozilla.
 		<meta><m n=":native"><e>"HTMLVideoElement"</e></m></meta>
 	</class>
 	<typedef path="js.html.VoidCallback" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/VoidCallback.hx"><f a=""><x path="Bool"/></f></typedef>
-	<class path="js.html.XMLHttpRequest" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/XMLHttpRequest.hx" extern="1">
-		<extends path="js.html.EventTarget"/>
-		<DONE public="1" get="inline" set="null" line="36" static="1">
-			<x path="Int"/>
-			<haxe_doc>The operation is complete.</haxe_doc>
-		</DONE>
-		<HEADERS_RECEIVED public="1" get="inline" set="null" line="39" static="1">
-			<x path="Int"/>
-			<haxe_doc><![CDATA[<code>send()</code> has been called, and headers and status are available.]]></haxe_doc>
-		</HEADERS_RECEIVED>
-		<LOADING public="1" get="inline" set="null" line="42" static="1">
-			<x path="Int"/>
-			<haxe_doc><![CDATA[Downloading; <code>responseText</code> holds partial data.]]></haxe_doc>
-		</LOADING>
-		<OPENED public="1" get="inline" set="null" line="45" static="1">
-			<x path="Int"/>
-			<haxe_doc><![CDATA[<code>send()</code>has not been called yet.]]></haxe_doc>
-		</OPENED>
-		<UNSENT public="1" get="inline" set="null" line="48" static="1">
-			<x path="Int"/>
-			<haxe_doc><![CDATA[<code>open()</code>has not been called yet.]]></haxe_doc>
-		</UNSENT>
-		<onabort public="1"><t path="js.html.EventListener"/></onabort>
-		<onerror public="1"><t path="js.html.EventListener"/></onerror>
-		<onload public="1"><t path="js.html.EventListener"/></onload>
-		<onloadend public="1"><t path="js.html.EventListener"/></onloadend>
-		<onloadstart public="1"><t path="js.html.EventListener"/></onloadstart>
-		<onprogress public="1"><t path="js.html.EventListener"/></onprogress>
-		<onreadystatechange public="1"><t path="js.html.EventListener"/></onreadystatechange>
-		<readyState public="1" set="null">
-			<x path="Int"/>
-			<haxe_doc><![CDATA[<p>The state of the request:</p> <table class="standard-table"> <tbody> <tr> <td class="header">Value</td> <td class="header">State</td> <td class="header">Description</td> </tr> <tr> <td><code>0</code></td> <td><code>UNSENT</code></td> <td><code>open()</code>has not been called yet.</td> </tr> <tr> <td><code>1</code></td> <td><code>OPENED</code></td> <td><code>send()</code>has not been called yet.</td> </tr> <tr> <td><code>2</code></td> <td><code>HEADERS_RECEIVED</code></td> <td><code>send()</code> has been called, and headers and status are available.</td> </tr> <tr> <td><code>3</code></td> <td><code>LOADING</code></td> <td>Downloading; <code>responseText</code> holds partial data.</td> </tr> <tr> <td><code>4</code></td> <td><code>DONE</code></td> <td>The operation is complete.</td> </tr> </tbody> </table>]]></haxe_doc>
-		</readyState>
-		<response public="1" set="null">
-			<d/>
-			<haxe_doc><![CDATA[The response entity body according to <code><a href="#responseType">responseType</a></code>, as an <a title="en/JavaScript typed arrays/ArrayBuffer" rel="internal" href="https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer"><code>ArrayBuffer</code></a>, <a title="en/DOM/Blob" rel="internal" href="https://developer.mozilla.org/en/DOM/Blob"><code>Blob</code></a>, <code><a rel="custom" href="https://developer.mozilla.org/en/DOM/Document">Document</a></code>
-, JavaScript object (for "moz-json"), or string. This is <code>NULL</code>&nbsp;if the request is not complete or was not successful. Getter throws DOMException.]]></haxe_doc>
-		</response>
-		<responseText public="1" set="null">
-			<c path="String"/>
-			<haxe_doc><![CDATA[The response to the request as text, or <code>null</code> if the request was unsuccessful or has not yet been sent. <strong>Read-only.</strong> Getter throws DOMException.]]></haxe_doc>
-		</responseText>
-		<responseType public="1">
-			<c path="String"/>
-			<haxe_doc><![CDATA[<p>Can be set to change the response type. This tells the server what format you want the response to be in.</p> <table class="standard-table"> <tbody> <tr> <td class="header">Value</td> <td class="header">Data type of <code>response</code> property</td> </tr> <tr> <td><em>empty string</em></td> <td>String (this is the default)</td> </tr> <tr> <td>"arraybuffer"</td> <td><a title="en/JavaScript typed arrays/ArrayBuffer" rel="internal" href="https://developer.mozilla.org/en/JavaScript_typed_arrays/ArrayBuffer"><code>ArrayBuffer</code></a></td> </tr> <tr> <td>"blob"</td> <td><code><a rel="custom" href="https://developer.mozilla.org/en/DOM/Blob">Blob</a></code>
-</td> </tr> <tr> <td>"document"</td> <td><code><a rel="custom" href="https://developer.mozilla.org/en/DOM/Document">Document</a></code>
-</td> </tr> <tr> <td>"text"</td> <td>String</td> </tr> <tr> <td>"moz-json"</td> <td>JavaScript object, parsed from a JSON string returned by the server 
-<span title="(Firefox 9.0 / Thunderbird 9.0 / SeaMonkey 2.6)
-">Requires Gecko 9.0</span>
-</td> </tr> </tbody> </table> Setter throws DOMException.]]></haxe_doc>
-		</responseType>
-		<responseXML public="1" set="null">
-			<c path="js.html.Document"/>
-			<haxe_doc><![CDATA[<p>The response to the request as a DOM <code><a class="internal" title="En/DOM/Document" rel="internal" href="https://developer.mozilla.org/en/DOM/document">Document</a></code> object, or <code>null</code> if the request was unsuccessful, has not yet been sent, or cannot be parsed as XML. The response is parsed as if it were a <code>text/xml</code> stream. <strong>Read-only.</strong></p> <div class="note"><strong>Note:</strong> If the server doesn't apply the <code>text/xml</code> Content-Type header, you can use <code>overrideMimeType()</code>to force <code>XMLHttpRequest</code> to parse it as XML anyway.</div> Getter throws DOMException.]]></haxe_doc>
-		</responseXML>
-		<status public="1" set="null">
-			<x path="Int"/>
-			<haxe_doc><![CDATA[The status of the response to the request. This is the HTTP result code (for example, <code>status</code> is 200 for a successful request). <strong>Read-only.</strong> Getter throws DOMException.]]></haxe_doc>
-		</status>
-		<statusText public="1" set="null">
-			<c path="String"/>
-			<haxe_doc><![CDATA[The response string returned by the HTTP server. Unlike <code>status</code>, this includes the entire text of the response message ("<code>200 OK</code>", for example). <strong>Read-only.</strong> Getter throws DOMException.]]></haxe_doc>
-		</statusText>
-		<upload public="1" set="null">
-			<c path="js.html.XMLHttpRequestUpload"/>
-			<haxe_doc><![CDATA[The upload process can be tracked by adding an event listener to <code>upload</code>. 
-<span>New in <a rel="custom" href="https://developer.mozilla.org/en/Firefox_3.5_for_developers">Firefox 3.5</a></span>]]></haxe_doc>
-		</upload>
-		<withCredentials public="1">
-			<x path="Bool"/>
-			<haxe_doc><![CDATA[<p>Indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies or authorization headers. 
-<span>New in <a rel="custom" href="https://developer.mozilla.org/en/Firefox_3.5_for_developers">Firefox 3.5</a></span>
-</p> <div class="note"><strong>Note:</strong> This never affects same-site requests.</div> <p>The default is <code>false</code>.</p> Setter throws DOMException.]]></haxe_doc>
-		</withCredentials>
-		<abort public="1" set="method"><f a=""><x path="Void"/></f></abort>
-		<getAllResponseHeaders public="1" set="method"><f a=""><c path="String"/></f></getAllResponseHeaders>
-		<getResponseHeader public="1" set="method"><f a="header">
-	<c path="String"/>
-	<c path="String"/>
-</f></getResponseHeader>
-		<open public="1" set="method"><f a="method:url:?async:?user:?password">
-	<c path="String"/>
-	<c path="String"/>
-	<x path="Bool"/>
-	<c path="String"/>
-	<c path="String"/>
-	<x path="Void"/>
-</f></open>
-		<overrideMimeType public="1" set="method"><f a="override_">
-	<c path="String"/>
-	<x path="Void"/>
-</f></overrideMimeType>
-		<send public="1" set="method">
-			<f a="data">
-				<c path="js.html.DOMFormData"/>
-				<x path="Void"/>
-			</f>
-			<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-			<overloads>
-				<send public="1" set="method">
-					<f a=""><x path="Void"/></f>
-					<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-				</send>
-				<send public="1" set="method">
-					<f a="data">
-						<c path="js.html.ArrayBuffer"/>
-						<x path="Void"/>
-					</f>
-					<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-				</send>
-				<send public="1" set="method">
-					<f a="data">
-						<c path="js.html.ArrayBufferView"/>
-						<x path="Void"/>
-					</f>
-					<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-				</send>
-				<send public="1" set="method">
-					<f a="data">
-						<c path="js.html.Blob"/>
-						<x path="Void"/>
-					</f>
-					<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-				</send>
-				<send public="1" set="method">
-					<f a="data">
-						<c path="js.html.Document"/>
-						<x path="Void"/>
-					</f>
-					<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-				</send>
-				<send public="1" set="method">
-					<f a="data">
-						<c path="String"/>
-						<x path="Void"/>
-					</f>
-					<haxe_doc><![CDATA[<p>Sends the request. If the request is asynchronous (which is the default), this method returns as soon as the request is sent. If the request is synchronous, this method doesn't return until the response has arrived.</p>
-<div class="note"><strong>Note:</strong> Any event listeners you wish to set must be set before calling <code>send()</code>.</div>
-
-<div id="section_11"><span id="Parameters_3"></span><h6 class="editable">Parameters</h6>
-<dl> <dt><code>body</code></dt> <dd>This may be an <code>nsIDocument</code>, <code>nsIInputStream</code>, or a string (an <code>nsISupportsString</code> if called from native code) that is used to populate the body of a POST request. Starting with Gecko 1.9.2, you may also specify an DOM<code><a rel="custom" href="https://developer.mozilla.org/en/DOM/File">File</a></code>
- , and starting with Gecko 2.0 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)
- you may also specify a <a title="en/XMLHttpRequest/FormData" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/FormData"><code>FormData</code></a> object.</dd>
-</dl>
-</div> Throws DOMException.]]></haxe_doc>
-				</send>
-			</overloads>
-		</send>
-		<setRequestHeader public="1" set="method"><f a="header:value">
-	<c path="String"/>
-	<c path="String"/>
-	<x path="Void"/>
-</f></setRequestHeader>
-		<new public="1" set="method"><f a=""><x path="Void"/></f></new>
-		<haxe_doc><![CDATA[<p><code>XMLHttpRequest</code> is a <a class="internal" title="En/JavaScript" rel="internal" href="https://developer.mozilla.org/en/JavaScript">JavaScript</a> object that was designed by Microsoft and adopted by Mozilla, Apple, and Google. It's now being <a class="external" title="http://www.w3.org/TR/XMLHttpRequest/" rel="external" href="http://www.w3.org/TR/XMLHttpRequest/" target="_blank">standardized in the W3C</a>. It provides an easy way to retrieve data at a URL. Despite its name, <code>XMLHttpRequest</code> can be used to retrieve any type of data, not just XML, and it supports protocols other than <a title="en/HTTP" rel="internal" href="https://developer.mozilla.org/en/HTTP">HTTP</a> (including <code>file</code> and <code>ftp</code>).</p>
-<p>To create an instance of <code>XMLHttpRequest</code>, simply do this:</p>
-<pre>var req = new XMLHttpRequest();
-</pre>
-<p>For details about how to use <code>XMLHttpRequest</code>, see <a class="internal" title="En/Using XMLHttpRequest" rel="internal" href="https://developer.mozilla.org/en/DOM/XMLHttpRequest/Using_XMLHttpRequest">Using XMLHttpRequest</a>.</p><br><br>
-Documentation for this class was provided by <a href="https://developer.mozilla.org/en/XMLHttpRequest">MDN</a>.]]></haxe_doc>
-		<meta><m n=":native"><e>"XMLHttpRequest"</e></m></meta>
-	</class>
-	<class path="js.html.XMLHttpRequestUpload" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/XMLHttpRequestUpload.hx" extern="1">
-		<extends path="js.html.EventTarget"/>
-		<onabort public="1"><t path="js.html.EventListener"/></onabort>
-		<onerror public="1"><t path="js.html.EventListener"/></onerror>
-		<onload public="1"><t path="js.html.EventListener"/></onload>
-		<onloadend public="1"><t path="js.html.EventListener"/></onloadend>
-		<onloadstart public="1"><t path="js.html.EventListener"/></onloadstart>
-		<onprogress public="1"><t path="js.html.EventListener"/></onprogress>
-		<meta><m n=":native"><e>"XMLHttpRequestUpload"</e></m></meta>
-	</class>
 	<class path="js.html.XPathExpression" params="" file="K:\Program Files\HaxeToolkit\haxe\std/js/html/XPathExpression.hx" extern="1">
 		<evaluate public="1" set="method"><f a="contextNode:type:inResult">
 	<c path="js.html.Node"/>
