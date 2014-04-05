@@ -15,6 +15,7 @@ class OnQuery{
 	 * available threw the window object.
 	 * return an instance of a Watcher that moniter the target, watch() will return the same instance every time.
 	 */
+	@:expose("watch")
 	static public function watch(target:EventTarget):Watcher {
 		if (Std.is(target, String)) {
 			target = targetBuilder(target);
@@ -26,6 +27,7 @@ class OnQuery{
 	 * available threw the window object.
 	 * use when() instead of watch() when the query does not require a target
 	 */
+	@:expose("when")
 	static public function when(query:String):Signal{
 		return globalContext.get('_watcher_').on(query);
 	}
@@ -51,10 +53,8 @@ class OnQuery{
 	static function main(){
 		new Watcher(globalContext);
 		#if js
-		var window:Dynamic=js.Browser.window;
-		window.watch = watch;
-		window.when = when;
-		var jQuery = window.jQuery;
+		var exports:Dynamic = untyped $hx_exports;
+		var jQuery =  exports.jQuery;
 		if (jQuery != null) {
 			targetBuilder = untyped jQuery;
 			jQuery.fn.dispatchEvent = jQuery.fn.trigger;
@@ -93,13 +93,11 @@ typedef EventTarget = js.html.EventTarget
  */
 typedef ContextEvent=js.html.Event
 #end
-
+/*
 #if (flash)
 typedef Event = flash.events.Event
 typedef EventTarget = flash.events.EventDispatcher
 typedef ContextEvent=com.onquery.flash.ContextEvent
 #end
 
-#if (flash9 || flash9doc || js ) 
-typedef UInt = Int 
-#end 
+*/

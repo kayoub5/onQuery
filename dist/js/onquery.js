@@ -234,11 +234,11 @@ com.onquery.SignalContext.prototype = $extend(haxe.ds.StringMap.prototype,{
 });
 com.onquery.OnQuery = $hx_exports.OnQuery = function() { };
 com.onquery.OnQuery.__name__ = true;
-com.onquery.OnQuery.watch = function(target) {
+com.onquery.OnQuery.watch = $hx_exports.watch = function(target) {
 	if(typeof(target) == "string") target = com.onquery.OnQuery.targetBuilder(target);
 	return com.onquery.OnQuery.getContext(target).get("_watcher_");
 };
-com.onquery.OnQuery.when = function(query) {
+com.onquery.OnQuery.when = $hx_exports.when = function(query) {
 	return com.onquery.OnQuery.globalContext.get("_watcher_").on(query);
 };
 com.onquery.OnQuery.getContext = function(target) {
@@ -258,10 +258,8 @@ com.onquery.OnQuery.getContext = function(target) {
 };
 com.onquery.OnQuery.main = function() {
 	new com.onquery.Watcher(com.onquery.OnQuery.globalContext);
-	var $window = window;
-	$window.watch = com.onquery.OnQuery.watch;
-	$window.when = com.onquery.OnQuery.when;
-	var jQuery = $window.jQuery;
+	var exports = $hx_exports;
+	var jQuery = exports.jQuery;
 	if(jQuery != null) {
 		com.onquery.OnQuery.targetBuilder = jQuery;
 		jQuery.fn.dispatchEvent = jQuery.fn.trigger;
@@ -295,7 +293,7 @@ com.onquery.Watcher.prototype = {
 	,unbind: function(query,handler) {
 		this.on(query).removeListener(handler);
 	}
-	,use: function(data) {
+	,'use': function(data) {
 		var c = new com.onquery.SignalContext();
 		var _g = 0;
 		var _g1 = Reflect.fields(data);
