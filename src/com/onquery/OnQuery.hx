@@ -4,13 +4,15 @@ import com.onquery.*;
 import com.onquery.core.*;
 import com.onquery.signals.*;
 
-@:expose("OnQuery")
+using com.onquery.utils.ContextUtils;
+
+@:expose("onQuery")
 class OnQuery{
 
 	static public var globalContext:SignalContext= new SignalContext([
-		'version' => '0.0.0'
+		'version' => '0.0.1'
 		]);
-	static public var targetBuilder:Dynamic->EventTarget;
+	static public var buildTarget:Dynamic->EventTarget;
 	/**
 	 * available threw the window object.
 	 * return an instance of a Watcher that moniter the target, watch() will return the same instance every time.
@@ -18,9 +20,9 @@ class OnQuery{
 	@:expose("watch")
 	static public function watch(target:EventTarget):Watcher {
 		if (Std.is(target, String)) {
-			target = targetBuilder(target);
+			target = buildTarget(target);
 		}
-		return getContext(target).get('_watcher_');
+		return target.getContext().getWatcher();
 	}
 
 	/**
@@ -29,34 +31,16 @@ class OnQuery{
 	 */
 	@:expose("when")
 	static public function when(query:String):Signal{
-		return globalContext.get('_watcher_').on(query);
+		return globalContext.getWatcher().on(query);
 	}
-	
-	static public function getContext(target:EventTarget):com.onquery.SignalContext{
-		var e:Dynamic=new ContextEvent('_context_');
-		target.dispatchEvent(e);
-		if(e.context==null){
-			var c:SignalContext=new SignalContext();
-			c.setParent(globalContext);
-			c.set('_target_',target);
-			var w:Watcher=new Watcher(c);
-			target.addEventListener('_context_',function(e:Dynamic){
-				e.context=c;
-				});
-			return c;
-		}
-		return e.context;
-	}
-	/**
-	* @private
-	*/
+
 	static function main(){
 		new Watcher(globalContext);
 		#if js
 		var exports:Dynamic = untyped $hx_exports;
 		var jQuery =  exports.jQuery;
 		if (jQuery != null) {
-			targetBuilder = untyped jQuery;
+			buildTarget = untyped jQuery;
 			jQuery.fn.dispatchEvent = jQuery.fn.trigger;
 			jQuery.fn.addEventListener = function(type:String, listener:EventListener, useCapture:Bool) {
 				var o = untyped __js__("this");
@@ -77,27 +61,16 @@ typedef Operator = Dynamic->Dynamic->Bool;
 /**
  * an event listener, typically a function with one argument.
  */
-typedef EventListener = Dynamic ->Void
+typedef EventListener = Array<Dynamic>->Void;
 
-#if (js)
-/**
+#if js
+/*
  * an event
- */
-typedef Event = js.html.Event
+ 
+typedef Event = js.html.Event*/
 /**
  * an event target, must impliment at least addEventListener, removeEventListener, dispatchEvent.
  */
 typedef EventTarget = js.html.EventTarget
-/**
- * a context event, a special type of event used for storing the Watcher inside the EventTarget
- */
-typedef ContextEvent=js.html.Event
-#end
-/*
-#if (flash)
-typedef Event = flash.events.Event
-typedef EventTarget = flash.events.EventDispatcher
-typedef ContextEvent=com.onquery.flash.ContextEvent
-#end
 
-*/
+#end

@@ -29,23 +29,27 @@ class AllSignal extends CombinedSignal{
 			queue.add(new SignalToken(token));
 			token.addListener(recheck);
 		}
-		rewind();
+		rewind(null);
 	}
 	
-	override public function rewind(e:Dynamic = null) {
+	override public function rewind(?args:Array<Dynamic>) {
 		for (t in  queue){
 			t.reset();
 		}
 	}
 	
-	private function recheck(e:Dynamic = null) {
+	private function recheck(args:Array<Dynamic>) {
 		var all:Bool = true;
 		var i:Iterator<SignalToken> = queue.iterator();
-		while (i.hasNext()){
+		while (all && i.hasNext()){
 			all = i.next().count > 0;
 		}
 		if (all) {
-			invokeListeners(new Event(getType()));
+			lastArgs = [];
+			for (t in queue) {
+				lastArgs.push(t.getSignal().lastArgs);
+			}
+			invokeListeners(lastArgs);
 		}
 	}
 	

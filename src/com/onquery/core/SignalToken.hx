@@ -27,12 +27,12 @@ class SignalToken{
 		return _signal;
 	}
 
-	private function refresh(event:Dynamic=null):Void{
+	private function refresh(args):Void{
 		time=currentTime++;
 		count++;
 	}
 
-	public function reset(event:Dynamic=null):Void{
+	public function reset():Void{
 		count=0;
 		time=0;
 	}

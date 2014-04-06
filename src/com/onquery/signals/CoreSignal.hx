@@ -4,9 +4,12 @@ import com.onquery.OnQuery;
 import com.onquery.collections.*;
 import com.onquery.SignalContext;
 
+using com.onquery.utils.ContextUtils;
+
 class CoreSignal implements ListenersCollection{
 
 	public var listeners:ListenersCollection;
+	public var lastArgs:Array<Dynamic>;
 	private var _context:SignalContext;
 
 	private var _type:String;
@@ -15,33 +18,30 @@ class CoreSignal implements ListenersCollection{
 	public function new(c:SignalContext){
 		_context=new SignalContext(c);
 		_context.set('this',this);
-		listeners = new ListenersArray();
+		listeners = new ListenersArray(getTarget());
 	}
 
 	public function getContext():SignalContext{return _context;}
-	public function getTarget():EventTarget{return _context.get('_target_');}
+	public function getTarget():EventTarget{return _context.getTarget();}
 
 	public function getType():String{return _type;}
 	public function setType(value:String):String{return _type=value;}
 
-	/** @inheritDoc */
-	public function addListener(listener:EventListener,options:Dynamic=null):Void{
-		listeners.addListener(listener,options);	
+	public function addListener(listener:EventListener):Void{
+		listeners.addListener(listener);	
 	}
 
-	/** @inheritDoc */
 	public function removeListener(listener:EventListener):Void{
 		listeners.removeListener(listener);
 	}
 
-	/** @inheritDoc */
 	public function removeAllListeners():Void{
-		listeners = new ListenersArray();
+		listeners.removeAllListeners();
 	}
 
-	/** @inheritDoc */
-	public function invokeListeners(event:Event):Void{
-		listeners.invokeListeners(event);
+	public function invokeListeners(args:Array<Dynamic>):Void {
+		lastArgs = args;
+		listeners.invokeListeners(args);
 	}
 
 }

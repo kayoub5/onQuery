@@ -1,0 +1,46 @@
+{
+	"name" : "{{&name}}",
+	"version" : "{{&version}}",
+	"description" : "",
+	"homepage" : "{{&homepage}}",
+	"author" : {
+		"name" : "{{&author.name}}",
+		"email" : "{{&author.email}}"
+	},
+	"contributors" : [],
+	"maintainers" : [{
+			"name" : "{{&author.name}}",
+			"email" : "{{&author.email}}"
+		}
+	],
+	"main" : "dist/onquery.js",
+
+	"repository" : {
+		"type" : "{{&repository.type}}",
+		"url" : "{{&repository.url}}"
+	},
+	"repositories" : [{
+			"type" : "{{&repository.type}}",
+			"url" : "{{&repository.url}}"
+		}
+	],
+
+	"bugs" : "{{&bugs.url}}",
+	"keywords" : ["cli", "http", "server"],
+	"dependencies" : {},
+
+	"license" : "{{&license.type}}",
+	"licenses" : [{
+			"type" : "{{&license.type}}",
+			"url" : "{{&license.url}}"
+			}
+	],
+	
+	"directories":{
+		"src":"src"
+	},
+	
+	"engines" : {
+		"node" : ">=0.6"
+	}
+}

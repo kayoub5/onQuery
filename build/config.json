@@ -1,0 +1,45 @@
+{
+    "name": "onquery",
+    "build_number": 26,
+    "ver": {
+        "major": 0,
+        "minor": 0,
+        "patch": 1,
+        "build": 60
+    },
+    "version": "0.0.1",
+    "description": "onQuery is an event querying engine for JavaScript",
+    "author": {
+        "name": "Ayoub Kaanich",
+        "email": "kayoub5@live.com"
+    },
+    "logo": "http://kayoub5.github.io/onQuery/images/logo.png",
+    "homepage": "http://kayoub5.github.io/onQuery/",
+    "contributors": [],
+    "main": "dist/onquery.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kayoub5/onQuery.git",
+        "github": "kayoub5/onQuery"
+    },
+    "bugs": {
+        "url": "https://github.com/kayoub5/onQuery/issues"
+    },
+    "keywords": [
+        "cli",
+        "http",
+        "server"
+    ],
+    "license": {
+        "name": "Creative Commons Attribution-NonCommercial 4.0 International",
+        "type": "CC-BY-NC-4.0",
+        "url": "http://creativecommons.org/licenses/by-nc/4.0/",
+        "shield": "https://img.shields.io/badge/licence-CC--BY--NC--4.0-yellow.png"
+    },
+    "examples": {
+        "url": "http://kayoub5.github.io/onQuery/#examples"
+    },
+    "engines": {
+        "node": ">=0.6"
+    }
+}

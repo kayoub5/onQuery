@@ -1,0 +1,46 @@
+{
+	"name" : "onquery",
+	"version" : "0.0.1",
+	"description" : "",
+	"homepage" : "http://kayoub5.github.io/onQuery/",
+	"author" : {
+		"name" : "Ayoub Kaanich",
+		"email" : "kayoub5@live.com"
+	},
+	"contributors" : [],
+	"maintainers" : [{
+			"name" : "Ayoub Kaanich",
+			"email" : "kayoub5@live.com"
+		}
+	],
+	"main" : "dist/onquery.js",
+
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/kayoub5/onQuery.git"
+	},
+	"repositories" : [{
+			"type" : "git",
+			"url" : "https://github.com/kayoub5/onQuery.git"
+		}
+	],
+
+	"bugs" : "https://github.com/kayoub5/onQuery/issues",
+	"keywords" : ["cli", "http", "server"],
+	"dependencies" : {},
+
+	"license" : "CC-BY-NC-4.0",
+	"licenses" : [{
+			"type" : "CC-BY-NC-4.0",
+			"url" : "http://creativecommons.org/licenses/by-nc/4.0/"
+			}
+	],
+	
+	"directories":{
+		"src":"src"
+	},
+	
+	"engines" : {
+		"node" : ">=0.6"
+	}
+}

@@ -26,7 +26,7 @@ this library is still BETA so use it with caution.
 
 
 ### Author ###
-Ayoub Kaanich kayoub5@gmail.com
+Ayoub Kaanich kayoub5@live.com
 
 
 ### Licence ###

@@ -2,7 +2,7 @@ package com.onquery.signals;
 
 import com.onquery.core.*;
 import com.onquery.*;
-import com.onquery.OnQuery.Event;
+import com.onquery.OnQuery;
 import haxe.Timer;
 
 
@@ -18,14 +18,14 @@ class IntervalSignal extends CombinedSignal{
 	private function new(c:SignalContext,delay:Int){
 		super(c);
 		this.delay = delay;
-		rewind();
+		rewind(null);
 	}
 	
 	private function tick() {
-		invokeListeners(new Event("interval"));
+		invokeListeners([]);
 	}
 	
-	override public function rewind(e:Dynamic = null) {
+	override public function rewind(?args:Array<Dynamic>) {
 		if(timer!=null){
 			timer.stop();
 		}
@@ -33,11 +33,11 @@ class IntervalSignal extends CombinedSignal{
 		timer.run = tick;
 	}
 	
-	override public function dispose(event:Event = null):Void {
+	override public function dispose():Void {
 		if(timer!=null){
 			timer.stop();
 			timer = null;
 		}
-		super.dispose(event);
+		super.dispose();
 	}
 }

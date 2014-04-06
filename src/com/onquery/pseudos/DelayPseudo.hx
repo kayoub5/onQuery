@@ -16,14 +16,14 @@ class DelayPseudo extends Pseudo implements Filter{
 		return signal;
 	}	
 
-	public function match(event:Dynamic):Bool{
+	public function match(args:Array<Dynamic>):Bool{
 		if(delayed){
 			delayed=false;
 			return true;
 		}
 		function onDelay():Void{
 			delayed=true;
-			_signal.invokeListeners(event);
+			_signal.invokeListeners(args);
 		}
 		Timer.delay(onDelay,Std.parseInt('0'+getValue()));
 		return false;

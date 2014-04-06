@@ -9,7 +9,7 @@ interface ListenersCollection{
  * If value classes are not specified (e.g. via Signal constructor), dispatch() can be called without arguments.
  * @return a ISlot, which contains the Function passed as the parameter
  */
-function addListener(listener:EventListener,options:Dynamic=null):Void;
+function addListener(listener:EventListener):Void;
 	
 /**
  * Unsubscribes a listener from the Signal.
@@ -27,5 +27,5 @@ function removeAllListeners():Void;
  * Dispatches an Dynamic to listeners.
  * @param	event	Any number of parameters to send to listeners. Will be type-checked against valueClasses.
  */
-function invokeListeners(event:Dynamic):Void;
+function invokeListeners(args:Array<Dynamic>):Void;
 }

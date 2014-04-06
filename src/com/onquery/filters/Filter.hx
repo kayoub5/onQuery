@@ -1,5 +1,5 @@
 package com.onquery.filters;
 
 interface Filter {
-	public function match(object:Dynamic):Bool;
+	public function match(args:Array<Dynamic>):Bool;
 }

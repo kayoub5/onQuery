@@ -4,18 +4,18 @@ package com.onquery.signals;
 import com.onquery.core.*;
 import com.onquery.OnQuery;
 
-@:expose("ConnectedSignal")
 class ConnectedSignal extends CombinedSignal{
 
 	public var queue:List<Dynamic>;
-	
+	public var signals:Array<Signal>;
 	public function new(c:SignalContext,t:List<Dynamic>) {
 		super(c);
-		queue=new List<Dynamic>();
+		queue = new List<Dynamic>();
+		signals = [];
 		setTokens(t);
 	}
 
-	override public function rewind(event:Dynamic = null) {
+	override public function rewind(?args:Array<Dynamic>) {
 		for (token in  queue){
 			if(Std.is(token,SignalToken)){
 				token.reset();
@@ -23,10 +23,11 @@ class ConnectedSignal extends CombinedSignal{
 		}
 	}
 
-	public function recheck(event:Dynamic=null){
+	public function recheck(args:Array<Dynamic>){
 		var count:Float=reduce().count;
-		if(count>0){
-			invokeListeners(new Event(getType()));
+		if (count > 0) {
+			lastArgs = signals.map(function(s) { return s.lastArgs; } );
+			invokeListeners(lastArgs);
 		}
 	}
 
@@ -80,6 +81,7 @@ class ConnectedSignal extends CombinedSignal{
 		for(token in tokens){
 			if (Std.is(token,Signal)) {
 				// If the token is a SignalToken, then add it to the output queue. 
+				signals.push(token);
 				queue.add(new SignalToken(token));
 				token.addListener(recheck);
 			}

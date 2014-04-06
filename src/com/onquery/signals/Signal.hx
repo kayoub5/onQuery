@@ -16,20 +16,24 @@ class Signal extends CoreSignal{
 	//--
 	override public function setType(t:String):String{
 		t=super.setType(t);
-		getTarget().addEventListener(t,invokeListeners,false);
+		getTarget().addEventListener(t,handle,false);
 		return t;
 	}
 	//----
-	public function dispose(event:Event=null):Void{
-		getTarget().removeEventListener(getType(),invokeListeners,false);
+	public function dispose():Void{
+		getTarget().removeEventListener(getType(),handle,false);
 		listeners=null;
 	}
+	
+	private function handle(event:Dynamic):Void {
+		invokeListeners(untyped __js__('arguments'));
+	}
 
-	override public function invokeListeners(event:Dynamic):Void{
+	override public function invokeListeners(args:Array<Dynamic>):Void{
 		for (f in filters) {
-			if(!f.match(event))return;
+			if(!f.match(args))return;
 		}
-		super.invokeListeners(event);
+		super.invokeListeners(args);
 	}
 
 }

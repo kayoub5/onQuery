@@ -4,15 +4,16 @@ import com.onquery.signals.*;
 import com.onquery.core.*;
 import com.onquery.OnQuery;
 import haxe.ds.StringMap;
+using com.onquery.utils.ContextUtils;
 class Watcher {
 	private var context:SignalContext;
 	public function new(c:SignalContext){
 		this.context=c;
-		c.set('_watcher_',this);
+		c.setWatcher(this);
 	}
 
-	public function bind(query:String,handler:EventListener,options:StringMap<Dynamic>=null):Void{
-		on(query).addListener(handler,options);
+	public function bind(query:String,handler:EventListener):Void{
+		on(query).addListener(handler);
 	}
 
 	public function on(query):Signal{

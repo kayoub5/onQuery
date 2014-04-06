@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="dist\js\onquery.js" />
+    <movie path="dist\onquery.js" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="com.onquery.OnQuery" />
     <option enabledebug="False" />
-    <option additional="-xml dist/haxedoc.xml" />
+    <option additional="-xml dist/onQuery.xml" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

@@ -2,38 +2,28 @@ package com.onquery.collections;
 
 import com.onquery.OnQuery;
 import com.onquery.signals.*;
-import haxe.ds.StringMap;
+
 class ListenersArray implements ListenersCollection{
-	private var list:List<Slot>;
-	public function new(){
-		list=new List<Slot>();
+	private var list:List<EventListener>;
+	public var self:Dynamic;
+	public function new(self:Dynamic) {
+		this.self = self;
+		list=new List<EventListener>();
 	}
 
 	public function removeListener(listener:EventListener):Void{
-		list=list.filter(function(item:Slot):Bool{
-			return item.listener!=listener;
-			});
+		list.remove(listener);
 	}
 
-	public function addListener(listener:EventListener, options:Dynamic=null):Void{
-		if(options==null){
-			options={};
-		}
-		removeListener(listener);
-		var slot:Slot=new Slot(listener,options);
-		list.add(slot);
+	public function addListener(listener:EventListener):Void{
+		list.add(listener);
 	}
 
-	public function invokeListeners(event:Dynamic):Void{
-		for(slot in list){
-			var fn:EventListener=slot.listener;
-			/*if(fn.length==0){
-				fn();
-			}
-			else{*/
-				fn(event);
-			//}
+	public function invokeListeners(args:Array<Dynamic>):Void {
+		for(listener in list){
+			(untyped listener).apply(self,args);
 		}
+		
 	}
 
 	public function removeAllListeners():Void{

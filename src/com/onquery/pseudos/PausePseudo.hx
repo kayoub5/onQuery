@@ -8,7 +8,7 @@ class PausePseudo extends Pseudo implements Filter{
 	private var _signal:Signal;
 	private var paused:Bool=false;
 	private var timer:Timer;
-	private var lastEvent:Dynamic;
+	private var lastArgs:Array<Dynamic>;
 
 	public function new(){
 		super('pause');
@@ -19,7 +19,7 @@ class PausePseudo extends Pseudo implements Filter{
 		return signal;
 	}	
 
-	public function match(event:Dynamic):Bool{
+	public function match(args:Array<Dynamic>):Bool{
 		if(timer!=null){
 			timer.stop();
 			timer=null;
@@ -28,14 +28,14 @@ class PausePseudo extends Pseudo implements Filter{
 			paused=false;
 			return true;
 		}
-		lastEvent=event;
+		lastArgs=args;
 		timer=Timer.delay(onPause,Std.parseInt('0'+getValue()));
 		return false;
 	}
 
 	private function onPause():Void{
 		paused=true;
-		_signal.invokeListeners(lastEvent);
+		_signal.invokeListeners(lastArgs);
 	}
 
 }

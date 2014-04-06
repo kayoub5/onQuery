@@ -18,7 +18,7 @@ class ThrottlePseudo extends Pseudo implements Filter{
 		return signal;
 	}	
 
-	public function match(event:Dynamic):Bool{
+	public function match(args:Array<Dynamic>):Bool{
 		if(throttling){
 			return false;
 		}

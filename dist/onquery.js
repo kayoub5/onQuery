@@ -84,6 +84,21 @@ List.prototype = {
 		this.q = null;
 		this.length = 0;
 	}
+	,remove: function(v) {
+		var prev = null;
+		var l = this.h;
+		while(l != null) {
+			if(l[0] == v) {
+				if(prev == null) this.h = l[1]; else prev[1] = l[1];
+				if(this.q == l) this.q = prev;
+				this.length--;
+				return true;
+			}
+			prev = l;
+			l = l[1];
+		}
+		return false;
+	}
 	,iterator: function() {
 		return { h : this.h, hasNext : function() {
 			return this.h != null;
@@ -93,16 +108,6 @@ List.prototype = {
 			this.h = this.h[1];
 			return x;
 		}};
-	}
-	,filter: function(f) {
-		var l2 = new List();
-		var l = this.h;
-		while(l != null) {
-			var v = l[0];
-			l = l[1];
-			if(f(v)) l2.add(v);
-		}
-		return l2;
 	}
 	,map: function(f) {
 		var b = new List();
@@ -121,6 +126,9 @@ IMap.__name__ = true;
 Math.__name__ = true;
 var Reflect = function() { };
 Reflect.__name__ = true;
+Reflect.hasField = function(o,field) {
+	return Object.prototype.hasOwnProperty.call(o,field);
+};
 Reflect.field = function(o,field) {
 	try {
 		return o[field];
@@ -232,36 +240,21 @@ com.onquery.SignalContext.prototype = $extend(haxe.ds.StringMap.prototype,{
 	}
 	,__class__: com.onquery.SignalContext
 });
-com.onquery.OnQuery = $hx_exports.OnQuery = function() { };
+com.onquery.OnQuery = $hx_exports.onQuery = function() { };
 com.onquery.OnQuery.__name__ = true;
 com.onquery.OnQuery.watch = $hx_exports.watch = function(target) {
-	if(typeof(target) == "string") target = com.onquery.OnQuery.targetBuilder(target);
-	return com.onquery.OnQuery.getContext(target).get("_watcher_");
+	if(typeof(target) == "string") target = com.onquery.OnQuery.buildTarget(target);
+	return com.onquery.utils.ContextUtils.getWatcher(com.onquery.utils.ContextUtils.getContext(target));
 };
 com.onquery.OnQuery.when = $hx_exports.when = function(query) {
-	return com.onquery.OnQuery.globalContext.get("_watcher_").on(query);
-};
-com.onquery.OnQuery.getContext = function(target) {
-	var e = new Event("_context_");
-	target.dispatchEvent(e);
-	if(e.context == null) {
-		var c = new com.onquery.SignalContext();
-		c.setParent(com.onquery.OnQuery.globalContext);
-		c.set("_target_",target);
-		var w = new com.onquery.Watcher(c);
-		target.addEventListener("_context_",function(e1) {
-			e1.context = c;
-		});
-		return c;
-	}
-	return e.context;
+	return com.onquery.utils.ContextUtils.getWatcher(com.onquery.OnQuery.globalContext).on(query);
 };
 com.onquery.OnQuery.main = function() {
 	new com.onquery.Watcher(com.onquery.OnQuery.globalContext);
 	var exports = $hx_exports;
 	var jQuery = exports.jQuery;
 	if(jQuery != null) {
-		com.onquery.OnQuery.targetBuilder = jQuery;
+		com.onquery.OnQuery.buildTarget = jQuery;
 		jQuery.fn.dispatchEvent = jQuery.fn.trigger;
 		jQuery.fn.addEventListener = function(type,listener,useCapture) {
 			var o = this;
@@ -275,12 +268,12 @@ com.onquery.OnQuery.main = function() {
 };
 com.onquery.Watcher = function(c) {
 	this.context = c;
-	c.set("_watcher_",this);
+	com.onquery.utils.ContextUtils.setWatcher(c,this);
 };
 com.onquery.Watcher.__name__ = true;
 com.onquery.Watcher.prototype = {
-	bind: function(query,handler,options) {
-		this.on(query).addListener(handler,options);
+	bind: function(query,handler) {
+		this.on(query).addListener(handler);
 	}
 	,on: function(query) {
 		var s = this.context.get(query);
@@ -315,43 +308,30 @@ com.onquery.collections.ListenersCollection.__name__ = true;
 com.onquery.collections.ListenersCollection.prototype = {
 	__class__: com.onquery.collections.ListenersCollection
 };
-com.onquery.collections.ListenersArray = function() {
+com.onquery.collections.ListenersArray = function(self) {
+	this.self = self;
 	this.list = new List();
 };
 com.onquery.collections.ListenersArray.__name__ = true;
 com.onquery.collections.ListenersArray.__interfaces__ = [com.onquery.collections.ListenersCollection];
 com.onquery.collections.ListenersArray.prototype = {
 	removeListener: function(listener) {
-		this.list = this.list.filter(function(item) {
-			return item.listener != listener;
-		});
+		this.list.remove(listener);
 	}
-	,addListener: function(listener,options) {
-		if(options == null) options = { };
-		this.removeListener(listener);
-		var slot = new com.onquery.collections.Slot(listener,options);
-		this.list.add(slot);
+	,addListener: function(listener) {
+		this.list.add(listener);
 	}
-	,invokeListeners: function(event) {
+	,invokeListeners: function(args) {
 		var $it0 = this.list.iterator();
 		while( $it0.hasNext() ) {
-			var slot = $it0.next();
-			var fn = slot.listener;
-			fn(event);
+			var listener = $it0.next();
+			listener.apply(this.self,args);
 		}
 	}
 	,removeAllListeners: function() {
 		this.list.clear();
 	}
 	,__class__: com.onquery.collections.ListenersArray
-};
-com.onquery.collections.Slot = function(listener,options) {
-	this.listener = listener;
-	this.options = options;
-};
-com.onquery.collections.Slot.__name__ = true;
-com.onquery.collections.Slot.prototype = {
-	__class__: com.onquery.collections.Slot
 };
 com.onquery.core = {};
 com.onquery.core.Interpreter = function() { };
@@ -573,10 +553,18 @@ com.onquery.filters.PropertyFilter.lessThan = function(left,right) {
 	return left < right;
 };
 com.onquery.filters.PropertyFilter.prototype = {
-	match: function(object) {
+	match: function(args) {
 		if(!com.onquery.filters.PropertyFilter.operators.exists(this.operator)) return false;
-		if(!Object.prototype.hasOwnProperty.call(object,this.name)) return false;
-		return (com.onquery.filters.PropertyFilter.operators.get(this.operator))(Reflect.field(object,this.name),this.value);
+		var object = args;
+		var names = this.name.split(".");
+		var valid = true;
+		while(names.length > 0) {
+			var n = names.shift();
+			if(n == "") n = 0; else n = n;
+			if(!Reflect.hasField(object,n)) return false;
+			object = Reflect.field(object,n);
+		}
+		return (com.onquery.filters.PropertyFilter.operators.get(this.operator))(object,this.value);
 	}
 	,__class__: com.onquery.filters.PropertyFilter
 };
@@ -650,7 +638,7 @@ com.onquery.pseudos.PausePseudo.prototype = $extend(com.onquery.pseudos.Pseudo.p
 		signal.filters.add(this);
 		return signal;
 	}
-	,match: function(event) {
+	,match: function(args) {
 		if(this.timer != null) {
 			this.timer.stop();
 			this.timer = null;
@@ -659,13 +647,13 @@ com.onquery.pseudos.PausePseudo.prototype = $extend(com.onquery.pseudos.Pseudo.p
 			this.paused = false;
 			return true;
 		}
-		this.lastEvent = event;
+		this.lastArgs = args;
 		this.timer = haxe.Timer.delay($bind(this,this.onPause),Std.parseInt("0" + this.getValue()));
 		return false;
 	}
 	,onPause: function() {
 		this.paused = true;
-		this._signal.invokeListeners(this.lastEvent);
+		this._signal.invokeListeners(this.lastArgs);
 	}
 	,__class__: com.onquery.pseudos.PausePseudo
 });
@@ -682,7 +670,7 @@ com.onquery.pseudos.DelayPseudo.prototype = $extend(com.onquery.pseudos.Pseudo.p
 		signal.filters.add(this);
 		return signal;
 	}
-	,match: function(event) {
+	,match: function(args) {
 		var _g = this;
 		if(this.delayed) {
 			this.delayed = false;
@@ -690,7 +678,7 @@ com.onquery.pseudos.DelayPseudo.prototype = $extend(com.onquery.pseudos.Pseudo.p
 		}
 		var onDelay = function() {
 			_g.delayed = true;
-			_g._signal.invokeListeners(event);
+			_g._signal.invokeListeners(args);
 		};
 		haxe.Timer.delay(onDelay,Std.parseInt("0" + this.getValue()));
 		return false;
@@ -710,7 +698,7 @@ com.onquery.pseudos.ThrottlePseudo.prototype = $extend(com.onquery.pseudos.Pseud
 		signal.filters.add(this);
 		return signal;
 	}
-	,match: function(event) {
+	,match: function(args) {
 		if(this.throttling) return false;
 		this.throttling = true;
 		haxe.Timer.delay($bind(this,this.onThrottle),Std.parseInt("0" + this.getValue()));
@@ -737,11 +725,11 @@ com.onquery.core.SignalToken.prototype = {
 		if(this._signal != null) this._signal.addListener($bind(this,this.refresh));
 		return this._signal;
 	}
-	,refresh: function(event) {
+	,refresh: function(args) {
 		this.time = com.onquery.core.SignalToken.currentTime++;
 		this.count++;
 	}
-	,reset: function(event) {
+	,reset: function() {
 		this.count = 0;
 		this.time = 0;
 	}
@@ -764,7 +752,7 @@ com.onquery.signals = {};
 com.onquery.signals.CoreSignal = function(c) {
 	this._context = new com.onquery.SignalContext(c);
 	this._context.set("this",this);
-	this.listeners = new com.onquery.collections.ListenersArray();
+	this.listeners = new com.onquery.collections.ListenersArray(this.getTarget());
 };
 com.onquery.signals.CoreSignal.__name__ = true;
 com.onquery.signals.CoreSignal.__interfaces__ = [com.onquery.collections.ListenersCollection];
@@ -773,7 +761,7 @@ com.onquery.signals.CoreSignal.prototype = {
 		return this._context;
 	}
 	,getTarget: function() {
-		return this._context.get("_target_");
+		return com.onquery.utils.ContextUtils.getTarget(this._context);
 	}
 	,getType: function() {
 		return this._type;
@@ -781,17 +769,18 @@ com.onquery.signals.CoreSignal.prototype = {
 	,setType: function(value) {
 		return this._type = value;
 	}
-	,addListener: function(listener,options) {
-		this.listeners.addListener(listener,options);
+	,addListener: function(listener) {
+		this.listeners.addListener(listener);
 	}
 	,removeListener: function(listener) {
 		this.listeners.removeListener(listener);
 	}
 	,removeAllListeners: function() {
-		this.listeners = new com.onquery.collections.ListenersArray();
+		this.listeners.removeAllListeners();
 	}
-	,invokeListeners: function(event) {
-		this.listeners.invokeListeners(event);
+	,invokeListeners: function(args) {
+		this.lastArgs = args;
+		this.listeners.invokeListeners(args);
 	}
 	,__class__: com.onquery.signals.CoreSignal
 };
@@ -804,20 +793,23 @@ com.onquery.signals.Signal.__super__ = com.onquery.signals.CoreSignal;
 com.onquery.signals.Signal.prototype = $extend(com.onquery.signals.CoreSignal.prototype,{
 	setType: function(t) {
 		t = com.onquery.signals.CoreSignal.prototype.setType.call(this,t);
-		this.getTarget().addEventListener(t,$bind(this,this.invokeListeners),false);
+		this.getTarget().addEventListener(t,$bind(this,this.handle),false);
 		return t;
 	}
-	,dispose: function(event) {
-		this.getTarget().removeEventListener(this.getType(),$bind(this,this.invokeListeners),false);
+	,dispose: function() {
+		this.getTarget().removeEventListener(this.getType(),$bind(this,this.handle),false);
 		this.listeners = null;
 	}
-	,invokeListeners: function(event) {
+	,handle: function(event) {
+		this.invokeListeners(arguments);
+	}
+	,invokeListeners: function(args) {
 		var $it0 = this.filters.iterator();
 		while( $it0.hasNext() ) {
 			var f = $it0.next();
-			if(!f.match(event)) return;
+			if(!f.match(args)) return;
 		}
-		com.onquery.signals.CoreSignal.prototype.invokeListeners.call(this,event);
+		com.onquery.signals.CoreSignal.prototype.invokeListeners.call(this,args);
 	}
 	,__class__: com.onquery.signals.Signal
 });
@@ -834,7 +826,7 @@ com.onquery.signals.CombinedSignal.prototype = $extend(com.onquery.signals.Signa
 		if(this._rewinder != null) this._rewinder.addListener($bind(this,this.rewind));
 		return this._rewinder;
 	}
-	,rewind: function(event) {
+	,rewind: function(args) {
 		throw "not implimented";
 	}
 	,__class__: com.onquery.signals.CombinedSignal
@@ -842,7 +834,7 @@ com.onquery.signals.CombinedSignal.prototype = $extend(com.onquery.signals.Signa
 com.onquery.signals.IntervalSignal = function(c,delay) {
 	com.onquery.signals.CombinedSignal.call(this,c);
 	this.delay = delay;
-	this.rewind();
+	this.rewind(null);
 };
 com.onquery.signals.IntervalSignal.__name__ = true;
 com.onquery.signals.IntervalSignal.build = function(p,c) {
@@ -851,19 +843,19 @@ com.onquery.signals.IntervalSignal.build = function(p,c) {
 com.onquery.signals.IntervalSignal.__super__ = com.onquery.signals.CombinedSignal;
 com.onquery.signals.IntervalSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
 	tick: function() {
-		this.invokeListeners(new Event("interval"));
+		this.invokeListeners([]);
 	}
-	,rewind: function(e) {
+	,rewind: function(args) {
 		if(this.timer != null) this.timer.stop();
 		this.timer = new haxe.Timer(this.delay);
 		this.timer.run = $bind(this,this.tick);
 	}
-	,dispose: function(event) {
+	,dispose: function() {
 		if(this.timer != null) {
 			this.timer.stop();
 			this.timer = null;
 		}
-		com.onquery.signals.CombinedSignal.prototype.dispose.call(this,event);
+		com.onquery.signals.CombinedSignal.prototype.dispose.call(this);
 	}
 	,__class__: com.onquery.signals.IntervalSignal
 });
@@ -876,7 +868,7 @@ com.onquery.signals.AllSignal = function(c,t) {
 		this.queue.add(new com.onquery.core.SignalToken(token));
 		token.addListener($bind(this,this.recheck));
 	}
-	this.rewind();
+	this.rewind(null);
 };
 com.onquery.signals.AllSignal.__name__ = true;
 com.onquery.signals.AllSignal.build = function(p,c) {
@@ -893,18 +885,26 @@ com.onquery.signals.AllSignal.build = function(p,c) {
 };
 com.onquery.signals.AllSignal.__super__ = com.onquery.signals.CombinedSignal;
 com.onquery.signals.AllSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
-	rewind: function(e) {
+	rewind: function(args) {
 		var $it0 = this.queue.iterator();
 		while( $it0.hasNext() ) {
 			var t = $it0.next();
 			t.reset();
 		}
 	}
-	,recheck: function(e) {
+	,recheck: function(args) {
 		var all = true;
 		var i = this.queue.iterator();
-		while(i.hasNext()) all = i.next().count > 0;
-		if(all) this.invokeListeners(new Event(this.getType()));
+		while(all && i.hasNext()) all = i.next().count > 0;
+		if(all) {
+			this.lastArgs = [];
+			var $it0 = this.queue.iterator();
+			while( $it0.hasNext() ) {
+				var t = $it0.next();
+				this.lastArgs.push(t.getSignal().lastArgs);
+			}
+			this.invokeListeners(this.lastArgs);
+		}
 	}
 	,__class__: com.onquery.signals.AllSignal
 });
@@ -942,18 +942,23 @@ com.onquery.signals.SequenceSignal.prototype = $extend(com.onquery.signals.Combi
 		}
 		this.index = -1;
 	}
-	,nextSignal: function(e) {
+	,nextSignal: function(args) {
 		var next = ++this.index;
-		if(next == this.queue.length) this.invokeListeners(e); else {
+		if(next == this.queue.length) {
+			this.lastArgs = this.queue.map(function(s) {
+				return s.lastArgs;
+			});
+			this.invokeListeners(this.lastArgs);
+		} else {
 			next %= this.queue.length;
 			this.reset();
 			this.index = next;
 			this.queue[next].addListener($bind(this,this.nextSignal));
 		}
 	}
-	,dispose: function(event) {
+	,dispose: function() {
 		this.reset();
-		com.onquery.signals.CombinedSignal.prototype.dispose.call(this,event);
+		com.onquery.signals.CombinedSignal.prototype.dispose.call(this);
 	}
 	,__class__: com.onquery.signals.SequenceSignal
 });
@@ -971,24 +976,30 @@ com.onquery.signals.ZombieSignal.__super__ = com.onquery.signals.Signal;
 com.onquery.signals.ZombieSignal.prototype = $extend(com.onquery.signals.Signal.prototype,{
 	__class__: com.onquery.signals.ZombieSignal
 });
-com.onquery.signals.ConnectedSignal = $hx_exports.ConnectedSignal = function(c,t) {
+com.onquery.signals.ConnectedSignal = function(c,t) {
 	com.onquery.signals.CombinedSignal.call(this,c);
 	this.queue = new List();
+	this.signals = [];
 	this.setTokens(t);
 };
 com.onquery.signals.ConnectedSignal.__name__ = true;
 com.onquery.signals.ConnectedSignal.__super__ = com.onquery.signals.CombinedSignal;
 com.onquery.signals.ConnectedSignal.prototype = $extend(com.onquery.signals.CombinedSignal.prototype,{
-	rewind: function(event) {
+	rewind: function(args) {
 		var $it0 = this.queue.iterator();
 		while( $it0.hasNext() ) {
 			var token = $it0.next();
 			if(js.Boot.__instanceof(token,com.onquery.core.SignalToken)) token.reset();
 		}
 	}
-	,recheck: function(event) {
+	,recheck: function(args) {
 		var count = this.reduce().count;
-		if(count > 0) this.invokeListeners(new Event(this.getType()));
+		if(count > 0) {
+			this.lastArgs = this.signals.map(function(s) {
+				return s.lastArgs;
+			});
+			this.invokeListeners(this.lastArgs);
+		}
 	}
 	,reduce: function() {
 		var stack = new List();
@@ -1019,6 +1030,7 @@ com.onquery.signals.ConnectedSignal.prototype = $extend(com.onquery.signals.Comb
 		while( $it0.hasNext() ) {
 			var token = $it0.next();
 			if(js.Boot.__instanceof(token,com.onquery.signals.Signal)) {
+				this.signals.push(token);
 				this.queue.add(new com.onquery.core.SignalToken(token));
 				token.addListener($bind(this,this.recheck));
 			} else if(js.Boot.__instanceof(token,com.onquery.core.Connector)) {
@@ -1071,6 +1083,36 @@ com.onquery.core.Build.popArg = function(p) {
 com.onquery.core.Build.wrap = function(prototype,context) {
 	return com.onquery.core.Interpreter.compile(com.onquery.core.Build.popArg(prototype),context);
 };
+com.onquery.utils = {};
+com.onquery.utils.ContextUtils = function() { };
+com.onquery.utils.ContextUtils.__name__ = true;
+com.onquery.utils.ContextUtils.getTarget = function(context) {
+	return context.get("_target_");
+};
+com.onquery.utils.ContextUtils.setTarget = function(context,target) {
+	return context.set("_target_",target);
+};
+com.onquery.utils.ContextUtils.getWatcher = function(context) {
+	return context.get("_watcher_");
+};
+com.onquery.utils.ContextUtils.setWatcher = function(context,watcher) {
+	return context.set("_watcher_",watcher);
+};
+com.onquery.utils.ContextUtils.getContext = function(target) {
+	var e = new Event("_context_");
+	target.dispatchEvent(e);
+	if(e.context == null) {
+		var c = new com.onquery.SignalContext();
+		c.setParent(com.onquery.OnQuery.globalContext);
+		com.onquery.utils.ContextUtils.setTarget(c,target);
+		new com.onquery.Watcher(c);
+		target.addEventListener("_context_",function(e1) {
+			e1.context = c;
+		});
+		return c;
+	}
+	return e.context;
+};
 haxe.Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -1118,10 +1160,20 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
+if(Array.prototype.map == null) Array.prototype.map = function(f) {
+	var a = [];
+	var _g1 = 0;
+	var _g = this.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		a[i] = f(this[i]);
+	}
+	return a;
+};
 com.onquery.OnQuery.globalContext = new com.onquery.SignalContext((function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
-	_g.set("version","0.0.0");
+	_g.set("version","0.0.1");
 	$r = _g;
 	return $r;
 }(this)));

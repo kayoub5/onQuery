@@ -24,10 +24,20 @@ class PropertyFilter implements Filter{
 		this.value=v;
 	}
 
-	public function match(object:Dynamic):Bool{
-		if(!operators.exists(operator))return false;
-		if(!Reflect.hasField(object,name))return false;
-		return operators.get(operator)(Reflect.field(object,name),value);	
+	public function match(args:Array<Dynamic>):Bool{
+		if (!operators.exists(operator)) return false;
+		var object = args;
+		var names = name.split('.');
+		var valid:Bool = true;
+		while (names.length > 0) {
+			var n:Dynamic=names.shift();
+			n = (n == '')?0:n;
+			if (!Reflect.hasField(object, n)){
+				return false;
+			}
+			object = Reflect.field(object, n);
+		}
+		return operators.get(operator)(object,value);	
 	}
 
 

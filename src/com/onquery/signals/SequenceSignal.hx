@@ -2,7 +2,6 @@ package com.onquery.signals;
 
 import com.onquery.core.*;
 import com.onquery.*;
-import com.onquery.OnQuery.Event;
 
 
 class SequenceSignal extends CombinedSignal{
@@ -39,10 +38,11 @@ class SequenceSignal extends CombinedSignal{
 		index = -1;
 	}
 	
-	private function nextSignal(e:Dynamic = null) {
+	private function nextSignal(?args:Array<Dynamic>) {
 		var next = ++index;
 		if (next == queue.length) {
-			invokeListeners(e);
+			lastArgs = queue.map(function(s) { return s.lastArgs; } );
+			invokeListeners(lastArgs);
 		}else {
 			next %= queue.length;
 			reset();
@@ -51,8 +51,8 @@ class SequenceSignal extends CombinedSignal{
 		}
 	}
 	
-	override public function dispose(event:Event = null):Void {
+	override public function dispose():Void {
 		reset();
-		super.dispose(event);
+		super.dispose();
 	}
 }

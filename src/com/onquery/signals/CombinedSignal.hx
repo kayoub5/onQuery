@@ -19,7 +19,7 @@ class CombinedSignal extends Signal{
 		return _rewinder;
 	}
 	
-	public function rewind(event:Dynamic = null){
+	public function rewind(?args:Array<Dynamic>){
 		throw 'not implimented';
 	}
 	
