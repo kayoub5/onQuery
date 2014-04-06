@@ -11,4 +11,4 @@ before_script:
   - haxelib setup ~/haxelib
 # Run the test!
 script:
-  - haxe -cp src -js dist/js/onquery.js -main com.onquery.OnQuery -xml dist/haxedoc.xml
+  - haxe -cp src -js dist/onquery.js -main com.onquery.OnQuery -xml dist/onQuery.xml
